@@ -22,6 +22,14 @@ body {
     align-items: center;
 }
 
+.radar-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
 /*   
 circle {
     opacity: 0.8;
