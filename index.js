@@ -2,6 +2,7 @@ const {
     select,
     csv
 } = d3;
+import { radarPlot } from './radarPlot.js';
 
 let data = {};
 let chosenAttribute = 'acousticness';
@@ -46,10 +47,6 @@ const svg = select('svg#plot')
     .append("g")
     .attr("transform",
       `translate(${margin.left},${margin.top})`);
-
-const svgRadar = select(".radar-container #radar-chart")
-    .attr("width", 600)
-    .attr("height", 600);
 
 const xAxis = svg.append("g");
 const yAxis = svg.append("g");
@@ -123,8 +120,10 @@ const render = () => {
     const ticks = [0.2, 0.4, 0.6, 0.8];
     const radarMaxTick = ticks[ticks.length - 1];
     const svgRadarDim = 600;
+    const svgRadar = select(".radar-container #radar-chart")
+    .attr("width", svgRadarDim)
+    .attr("height", svgRadarDim);
     const radarDim = svgRadarDim / 2;
-    const circleSize = radarDim * 0.6;
     const radarLabels = [
         'acousticness',
         'danceability',
@@ -135,110 +134,7 @@ const render = () => {
         'valence'
     ];
 
-    let radialScale = d3.scaleLinear()
-        .domain([0,0.8])
-        .range([0, 200]);
-
-    function angleToCoordinate(angle, value){
-        let x = Math.cos(angle) * radialScale(value);
-        let y = Math.sin(angle) * radialScale(value);
-        return {"x": radarDim + x, "y": radarDim - y};
-    }
-    function angleToCoordinateLabel(angle, value) {
-        let shift = false;
-        let shiftValue = 50;
-        console.log("angle:", angle);
-        if (angle <= Math.PI + Math.PI/2) {
-            shift = true;
-        }
-        console.log("is true:", shift);
-        let x = Math.cos(angle) * radialScale(value);
-        let y = Math.sin(angle) * radialScale(value);
-        if(shift) x -= shiftValue;
-        return {"x": radarDim + x, "y": radarDim - y};
-    }
-
-    const circles = svgRadar.selectAll("circle")
-        .data(ticks);
-    
-    circles.join("circle")
-        .attr("cx", radarDim)
-        .attr("cy", radarDim)
-        .attr("fill", "none")
-        .attr("stroke", "gray")
-        .attr("r", (d) => radialScale(d));
-    
-    const circleLabel = svgRadar.selectAll("text.circle-label")
-        .data(ticks);
-    
-    circleLabel.join("text")
-        .attr("class", "circle-label")
-        .attr("x", radarDim + 5)
-        .attr("y", (d) => radarDim - radialScale(d))
-        .text((d) => d.toString());
-    
-    function getRadarAxis(i) {
-        let angle = (Math.PI / 2) + (2 * Math.PI * i / radarLabels.length);
-        let line_coordinate = angleToCoordinate(angle, radarMaxTick);
-        return line_coordinate;
-    }
-
-    function getRadarAxisLabel(i) {
-        let angle = (Math.PI / 2) + (2 * Math.PI * i / radarLabels.length);
-        let label_offset = 0.1;
-        let label_coordinate = angleToCoordinateLabel(angle, radarMaxTick + label_offset);
-        console.log(radarLabels[i], label_coordinate);
-        return label_coordinate;
-    } 
-
-    const radarAxis = svgRadar.selectAll("line.axis")
-        .data(radarLabels);
-    
-    radarAxis.join("line")
-        .attr("class", "axis")
-        .attr("x1", radarDim)
-        .attr("y1", radarDim)
-        .attr("x2", (d, i) => getRadarAxis(i).x)
-        .attr("y2", (d, i) => getRadarAxis(i).y)
-        .attr("stroke","black");
-
-    const radarAxisLabel = svgRadar.selectAll("text.axis-label")
-    .data(radarLabels);
-    
-    radarAxisLabel.join("text")
-        .attr("class", "axis-label")
-        .attr("x", (d, i) => getRadarAxisLabel(i).x)
-        .attr("y", (d, i) => getRadarAxisLabel(i).y)
-        .text((d) => (d));
-
-    // helper functions
-    let line = d3.line()
-    .x(d => d.x)
-    .y(d => d.y);
-
-    function getPathCoordinates(data_point){
-        let coordinates = [];
-        for (var i = 0; i < radarLabels.length; i++){
-            let ft_name = radarLabels[i];
-            let angle = (Math.PI / 2) + (2 * Math.PI * i / radarLabels.length);
-            coordinates.push(angleToCoordinate(angle, data_point[ft_name]));
-        }
-        return coordinates;
-    }
-
-    const radarPaths = svgRadar.selectAll("path.plots")
-        .data(radarData);
-
-    let colors = ["darkorange", "gray", "navy"];
-    
-    radarPaths.join("path")
-        .datum((d) => getPathCoordinates(d))
-        .attr("class", "plots")
-        .attr("d", d => line(d))
-        .attr("stroke", (d,i) => colors[i])
-        .attr("fill", (d, i) => colors[i])
-        .attr("stroke-opacity", 1)
-        .attr("opacity", 0.5);
+    radarPlot(svgRadar, ticks, svgRadarDim, radarLabels, radarData);
     
 };
 
