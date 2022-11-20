@@ -63,6 +63,39 @@ for(let i = 0; i < attributes.length; i++) {
     selectAttribute.appendChild(el);
 }
 
+// create a tooltip
+const TooltipHistogram = d3.select(".svg-container")
+.append("div")
+.append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "black")
+    .style("color", "white")
+    .style("border-radius", "5px")
+    .style("padding", "10px")
+.style("position", "absolute");
+
+const mouseoverHistogram = function(d) {
+    TooltipHistogram
+      .style("opacity", 1)
+    d3.select(this)
+      .style("stroke", "black")
+      .style("opacity", 1)
+  }
+const mousemoveHistogram = function(event, d) {
+    TooltipHistogram
+        .html("Count of songs<br>within this range: " + d.length)
+        .style("left", (event.clientX+50) + "px")
+        .style("top", (event.clientY) + "px");
+}
+const mouseleaveHistogram = function(d) {
+TooltipHistogram
+    .style("opacity", 0)
+d3.select(this)
+    .style("stroke", "none")
+    .style("opacity", 0.8)
+}
+
 const render = () => {
     // X axis: scale and draw:
     console.log('render');
@@ -107,15 +140,20 @@ const render = () => {
         .data(bins);
 
     // Manage the existing bars and eventually the new ones:
-    u
-        .join("rect") // Add a new rect for each new elements
+    const uJoin = u
+        .join("rect");
+    uJoin // Add a new rect for each new elements
         .transition() // and apply changes to all of them
         .duration(1000)
-          .attr("x", 1)
-          .attr("transform", function(d) { return `translate(${x(d.x0)}, ${y(d.length)})`})
-          .attr("width", function(d) { return x(d.x1) - x(d.x0) - 1; })
-          .attr("height", function(d) { return height - y(d.length); })
-          .style("fill", "#69b3a2");
+            .attr("x", 1)
+            .attr("transform", function(d) { return `translate(${x(d.x0)}, ${y(d.length)})`})
+            .attr("width", function(d) { return x(d.x1) - x(d.x0) - 1; })
+            .attr("height", function(d) { return height - y(d.length); })
+            .style("fill", "#69b3a2");
+    uJoin
+        .on("mouseover", mouseoverHistogram)
+        .on("mousemove", mousemoveHistogram)
+        .on("mouseleave", mouseleaveHistogram);
     
     // radial chart
     const ticks = [0.2, 0.4, 0.6, 0.8];
