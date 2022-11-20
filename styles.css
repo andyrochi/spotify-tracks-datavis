@@ -1,0 +1,130 @@
+body {
+    margin: 0px;
+}
+
+.content {
+        /* width: 80%; */
+    margin: auto;
+    font-family: sans-serif;
+}
+.title {
+    text-transform: uppercase;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: normal;
+    color: #635F5D;
+}
+
+.svg-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.svg-container.legend {
+    flex-direction: row;
+}
+  
+circle {
+    opacity: 0.8;
+}
+  
+text {
+    font-family: 'Arial Narrow Bold', sans-serif;
+    text-transform: uppercase;
+}
+
+.description {
+    font-family: 'Arial Narrow Bold', sans-serif;
+}
+
+.description b {
+    color: gray;
+}
+
+.description .title {
+    font-size: 1.2rem;
+    color: gray;
+}
+  
+.tick text {
+    font-size: 1rem;
+    fill: #635F5D;
+}
+  
+.tick line {
+    stroke: #C0C0BB;
+}
+  
+.axis-label {
+    font-size: 1rem;
+    fill: #8E8883;
+}
+
+.axis-label:hover {
+    cursor: move;
+}
+  
+#menus select {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+}
+
+#menus {
+    margin: auto;
+    /* width: 80%; */
+    display: flex;
+    justify-content: end;
+    font-family: sans-serif;
+}
+
+#menus .menu-axis {
+    margin: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.label {
+    text-align: center;
+    text-transform: uppercase;
+}
+
+@media (max-width: 1280px) {
+    #menus {
+        width: 80%;
+    }
+    .content {
+        width: 80%;
+    }
+}
+
+@media (min-width: 1280px) {
+    #menus {
+        width: 1024px;
+    }
+    .content {
+        width: 1024px;
+    }
+}
+
+@media (max-width: 700px) {
+    text, .axis-label {
+        font-size: 0.8rem;
+    }
+}
+
+button {
+    border-radius: 0.2rem;
+    padding: 0.2rem 1rem;
+    background-color: white;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+.tick text {
+    z-index: 100;
+}
