@@ -22,10 +22,7 @@ body {
     align-items: center;
 }
 
-.svg-container.legend {
-    flex-direction: row;
-}
-  
+/*   
 circle {
     opacity: 0.8;
 }
@@ -33,7 +30,7 @@ circle {
 text {
     font-family: 'Arial Narrow Bold', sans-serif;
     text-transform: uppercase;
-}
+} */
 
 .description {
     font-family: 'Arial Narrow Bold', sans-serif;
@@ -47,7 +44,7 @@ text {
     font-size: 1.2rem;
     color: gray;
 }
-  
+/*   
 .tick text {
     font-size: 1rem;
     fill: #635F5D;
@@ -62,34 +59,10 @@ text {
     fill: #8E8883;
 }
 
-.axis-label:hover {
-    cursor: move;
-}
-  
-#menus select {
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
-    border-radius: 10px;
-}
-
-#menus {
-    margin: auto;
-    /* width: 80%; */
-    display: flex;
-    justify-content: end;
-    font-family: sans-serif;
-}
-
-#menus .menu-axis {
-    margin: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
 .label {
     text-align: center;
     text-transform: uppercase;
-}
+} */
 
 @media (max-width: 1280px) {
     #menus {

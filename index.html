@@ -4,43 +4,37 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iris Dataset Visualization</title>
+    <title>Spotify Tracks Dataset Visualization</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- CSS only -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
     
 </head>
 <body>
 
     <div class="svg-container">
+        Distribution of Numeric Attributes
         <svg id="plot"></svg>
+        <!-- <p>
+            <label for="bin"># bins (between 10 and 50):</label>
+            <input class="form-range" type="range" id="nBin" name="bin" list="tickmarks">
+            <datalist id="tickmarks">
+                <option value="10"></option>
+                <option value="20"></option>
+                <option value="50"></option>
+                <option value="100"></option>
+            </datalist>
+        </p> -->
+        <label for="attribute">Selected attribute</label>
+        <select name="attribute" id="selectAttribute" class="form-select" aria-label="select display">
+            <option disabled>-- Choose an attribute --</option>
+        </select>
     </div>
-    <div class="svg-container legend">
-        <svg id="legend"></svg>
-        <div class="description">
-            <button id="rescale-btn">Scale axis to min-max value</button>
-            <p class="title">
-                Controls
-            </p>
-                <p>
-                    <b>Reorder Axes:</b> Drag an axis label horizontally.
-                </p>
-                <p>
-                    <b>Include/exclude class:</b> Click on a class label.
-                </p>
-                <p>
-                    <b>Highlight class:</b> Hover on class name or line.
-                </p>
-        </div>
-    </div>
-    
 
     <div class="content">
         <h1 class="title">
-            Visualization of the Iris Dataset
+            Spotify Tracks Dataset Visualization
         </h1>
-        <p class="description">
-            This parallel coordinate plot is created with d3.js, which shows visualization of the iris dataset from <a href="https://archive.ics.uci.edu/ml/datasets/iris">UCI Machine Learning Repository: Iris Data Set</a>.
-        </p>
         <p>Student ID: 0716021</p>
         <p>Name: Chia-Hao Chang 張家豪</p>
     </div>

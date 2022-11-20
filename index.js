@@ -1,228 +1,117 @@
 const {
     select,
-    csv,
-    scaleOrdinal,
-    schemeAccent
+    csv
 } = d3;
-import { colorLegend } from "./colorLegend.js";
 
-const svg = select('svg#plot');
-const svgLegend = select('svg#legend');
 let data = {};
-const margin = {
-    top: 30,
-    right: 70, 
-    bottom: 10,
-    left: 70
+let chosenAttribute = 'acousticness';
+
+const attributes = [
+    'acousticness'
+    , 'danceability'
+    , 'energy'
+    , 'instrumentalness'
+    , 'liveness'
+    , 'speechiness'
+    , 'valence'
+    , 'loudness'
+    , 'duration_ms'
+    , 'popularity'
+    , 'tempo'];
+
+const xMax = {
+    'acousticness': 1,
+    'danceability': 1,
+    'energy': 1,
+    'instrumentalness': 1,
+    'liveness': 1,
+    'speechiness': 1, 
+    'valence': 1,
+    'loudness': 5.0,
+    'duration_ms': 5000000,
+    'popularity': 100,
+    'tempo': 260
 };
-let dynamicRange = false;
-let width, height, innerWidth, innerHeight;
-let y = {};
-let dragging = {};
-let dimensions;
-let colorScale;
-let classData = {};
+// set the dimensions and margins of the graph
+const margin = {top: 10, right: 30, bottom: 30, left: 50},
+width = 460 - margin.left - margin.right,
+height = 400 - margin.top - margin.bottom;
+let nBin = 10;
 
-let highlighted = false;
+const svg = select('svg#plot')
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform",
+      `translate(${margin.left},${margin.top})`);;
 
-// Rescale Axis
-const rescaleAxis = function(event, d){
-    if (dynamicRange)
-        d3.select('#rescale-btn')
-            .text('Scale axis to min-max value')
-    else
-        d3.select('#rescale-btn')
-            .text('Align axes scale')
-    dynamicRange = !dynamicRange
-    const axisName = d
-    y[axisName] = d3.scaleLinear()
-            .domain( dynamicRange ? d3.extent(data, d => d[axisName]) : [0,8])
-            .range([innerHeight+margin.bottom, margin.top]);
-    
-    render()
-}
-// Highlight the class that is hovered
-const highlight = function(event, d){
-    const selected_class = d.class
-    highlighted = true;
-    // first every group turns grey
-    d3.selectAll(".line")
-    .transition().duration(200)
-    .style("stroke", "lightgrey")
-    .style("opacity", "0.2")
-    // Second the hovered specie takes its color
-    d3.selectAll("." + selected_class)
-    .transition().duration(200)
-    .style("stroke", colorScale(selected_class))
-    .style("opacity", "1")
-}
+const xAxis = svg.append("g");
+const yAxis = svg.append("g");
 
-const debouncedUnhighlight = debounce((event, d) => {
-    if (highlighted) return;
-    d3.selectAll(".line")
-        .transition().duration(200)
-        .style("stroke", function(d){ return( colorScale(d.class))} )
-        .style("opacity", "0.8");
-}, 1000);
-// Unhighlight
-const unhighlight = function(event, d){
-    highlighted = false;
-    debouncedUnhighlight(event, d);
-}
+const selectAttribute = document.getElementById("selectAttribute");
 
-const rescaleBtn = d3.select("#rescale-btn")
-    .on("click", rescaleAxis);
-
-const filterData = function(event, className) {
-    console.log('called', classData[className].filtered)
-    if (classData[className].filtered) {
-        data = data.concat(classData[className].content);
-        svgLegend.select(`.text-${className}`)
-            .style('text-decoration', 'none');
-    }
-    else {
-        data = data.filter((d) => d.class !== className);
-        svgLegend.select(`.text-${className}`)
-            .style('text-decoration', 'line-through');
-    }
-    classData[className].filtered = !classData[className].filtered;
-    render();
+// construct select menu
+for(let i = 0; i < attributes.length; i++) {
+    const opt = attributes[i];
+    const el = document.createElement("option");
+    el.textContent = opt;
+    el.value = opt;
+    selectAttribute.appendChild(el);
 }
 
 const render = () => {
-    const svgElement = document.getElementById("plot");
-    const viewPortWidth = document.documentElement.clientWidth;
-    // For each dimension, I build a linear scale. I store all in a y object
-    if (viewPortWidth > 1280) {
-        svgElement.setAttribute("width", 1024);
-    }
-    else {
-        svgElement.setAttribute("width", "80%");
-    }
+    // X axis: scale and draw:
+    const x = d3.scaleLinear()
+        .domain([0, xMax[chosenAttribute]])
+        .range([0, width]);
     
-    let bb = svgElement.getBoundingClientRect();
-    width = +bb.width;
-    height = width*3/5;
-    innerWidth = width - margin.left - margin.right;
-    innerHeight = height - margin.top - margin.bottom;
-    svgElement.setAttribute("height", `${height}`);
-    if (colorScale === undefined)
-        colorScale = scaleOrdinal(schemeAccent);
+    xAxis
+        .attr("transform", `translate(0,${height})`)
+        .call(d3.axisBottom(x));
 
-    for (let i in dimensions) { 
-        const dimName = dimensions[i];
-        y[dimName] = d3.scaleLinear()
-            .domain( dynamicRange ? d3.extent(data, d => d[dimName]) : [0,8])
-            .range([innerHeight, margin.top]);
-    }
-
-    // Build the X scale -> it find the best position for each Y axis
-    const x = d3.scalePoint()
-        .range([margin.left, innerWidth+margin.left])
-        // .padding(1)
-        .domain(dimensions);
-
-    // The path function take a row of the csv as input, and return x and y coordinates of the line to draw for this raw.
-    const path = (d) =>
-        d3.line()(dimensions.map((p) => { return [x(p), y[p](d[p])]; }));
-
-    function position(d) {
-        const v = dragging[d];
-        return v === undefined ? x(d) : v;
-    }
-
-    // Draw the lines
-    svg
-        .selectAll(".myPath")
-        .data(data)
-        .join("path")
-            .attr("class", function (d) { return "myPath line " + d.class } ) // 2 class for each line: 'line' and the group name
-            .attr("d",  path)
-            .style("fill", "none")
-            .style("stroke", d => colorScale(d.class))
-            .style("opacity", 0.8)
-            .on("mouseover", highlight)
-            .on("mouseleave", unhighlight);
-
-    // Draw the axis:
-
-    const g = svg.selectAll(".myAxis").data(dimensions);
-    const gEnter =  g
-        .enter()
-        .append("g")
-        .attr("class", "myAxis");
-
-    const axesG = gEnter.merge(g)
-        // translate this element to its right position on the x axis
-        .attr("transform", (d) => `translate(${x(d)})`);
+    // Y axis: initialization
+    const y = d3.scaleLinear()
+        .range([height, 0]);
     
-    axesG
-        .call(d3.drag()
-        .on("start", function(d) {
-            dragging[d.subject] = this.__origin__ = x(d.subject);
-            this.__dragged__ = false;
-        })
-        .on("drag", function(d) {
-            dragging[d.subject] = Math.min(width, Math.max(0, this.__origin__ += d.dx));
-            dimensions.sort((a, b) => position(a) - position(b));
-            x.domain(dimensions);
-            axesG.attr("transform", (d) => `translate(${position(d)})`);
-            this.__dragged__ = true;
-        })
-        .on("end", function(d) {
-            // reorder axes
-            d3.select(this).attr("transform", `translate(${x(d.subject)})`);
-            render();
-            delete this.__dragged__;
-            delete this.__origin__;
-            delete dragging[d.subject];
-        }))
+    const thresholds = x.ticks(nBin);
+    thresholds.pop();
 
-    const eachAxes = axesG
-        .each(function(d) { 
-            d3.select(this)
-                 // build the axis with the call function
-                .transition().duration(300)
-                .call(
-                    d3
-                    .axisLeft()
-                    .scale(y[d])
-                )
-                .attr("class", (d) => { return `myAxis ${d.split(' ').join('_')}` });       
-        }); 
+    // console.log('hack:', thresholds);
+    // dynamic rendering
+    // set the parameters for the histogram
+    const histogram = d3.histogram()
+        .value(function(d) { return d[chosenAttribute]; })   // I need to give the vector of value
+        .domain(x.domain())  // then the domain of the graphic
+        .thresholds(thresholds); // then the numbers of bins -> remove last threshold
+    
+    
+    // And apply this function to data to get the bins
+    const bins = histogram(data);
 
-    const axesLabelText = gEnter
-        // Add axis title
-        .append("text")
-            .attr('class', 'axis-label')
-            .style("text-anchor", "middle")
-            .attr("y", +20)
-            .style("fill", "black")
-        .merge(g.select('.axis-label'))
-            .text(function(d) { return d; });
+    // console.log('bins:', bins);
 
-    const legendG = svgLegend.selectAll('.legend').data([null]);
-    const legendGEnter = legendG
-        .enter()
-        .append('g')
-            .attr('class', 'legend');
+    // Y axis: update now that we know the domain
+    y.domain([0, d3.max(bins, function(d) { return d.length; })]);   // d3.hist has to be called before the Y axis obviously
+    yAxis
+        .transition()
+        .duration(1000)
+        .call(d3.axisLeft(y));
+    
+    // Join the rect with the bins data
+    const u = svg.selectAll("rect")
+        .data(bins);
 
-    const translatedLegend = legendGEnter.merge(legendG)
-        .attr('transform', 
-            `translate(${40},${30})`
-        );
-    translatedLegend
-        .call(colorLegend, {
-            colorScale,
-            circleRadius: 10,
-            spacing: 40,
-            textOffset: 20,
-            highlight,
-            unhighlight,
-            filterData,
-            classData
-            });
-        ;
+    // Manage the existing bars and eventually the new ones:
+    u
+        .join("rect") // Add a new rect for each new elements
+        .transition() // and apply changes to all of them
+        .duration(1000)
+          .attr("x", 1)
+          .attr("transform", function(d) { return `translate(${x(d.x0)}, ${y(d.length)})`})
+          .attr("width", function(d) { return x(d.x1) - x(d.x0) - 1; })
+          .attr("height", function(d) { return height - y(d.length); })
+          .style("fill", "#69b3a2");
+    
 };
 
 function debounce(func, timeout = 30) {
@@ -233,28 +122,35 @@ function debounce(func, timeout = 30) {
     };
 }
 
+d3.select("#selectAttribute").on("input", function() {
+    chosenAttribute = this.value;
+    render();
+})
+
 const debouncedResize = debounce(() => render());
 
 const resize = addEventListener('resize', debouncedResize);
 
-csv('http://vis.lab.djosix.com:2020/data/iris.csv')
+csv('http://vis.lab.djosix.com:2020/data/spotify_tracks.csv')
     .then(loadedData => {
         loadedData.forEach(d => {
-        d['sepal length'] = +d['sepal length'];
-        d['sepal width'] = +d['sepal width'];
-        d['petal length'] = +d['petal length'];
-        d['petal width'] = +d['petal width']; 
+        // fields
+        d['acousticness'] = +d['acousticness'];
+        d['danceability'] = +d['danceability'];
+        d['duration_ms'] = +d['duration_ms'];
+        d['energy'] = +d['energy'];
+        d['instrumentalness'] = +d['instrumentalness'];
+        d['liveness'] = +d['liveness'];
+        d['loudness'] = +d['loudness'];
+        d['mode'] = +d['mode'];
+        d['popularity'] = +d['popularity'];
+        d['speechiness'] = +d['speechiness'];
+        d['tempo'] = +d['tempo'];
+        d['time_signature'] = +d['time_signature'];
+        d['valence'] = +d['valence'];
         });
-        loadedData.pop();
+
         data = loadedData;
-        dimensions = data.columns.filter((d) => d !== 'class');
-        loadedData.forEach(d => {
-            if (classData[d.class] === undefined) {
-                classData[d.class] = {}
-                classData[d.class].content = [];
-                classData[d.class].filtered = false;
-            }
-            classData[d.class].content.push(d);
-        })
+
         render();
     });
