@@ -7,6 +7,7 @@ import { radarPlot } from './radarPlot.js';
 let data = {};
 let chosenAttribute = 'acousticness';
 let radarData = {};
+let allData = {};
 
 const attributes = [
     'acousticness'
@@ -155,6 +156,18 @@ const debouncedResize = debounce(() => render());
 
 const resize = addEventListener('resize', debouncedResize);
 
+const getRadarObject = (dataList) => {
+    return {
+        acousticness: d3.mean(dataList, d => d['acousticness']),
+        danceability: d3.mean(dataList, d => d['danceability']),
+        energy: d3.mean(dataList, d => d['energy']),
+        instrumentalness: d3.mean(dataList, d => d['instrumentalness']),
+        liveness: d3.mean(dataList, d => d['liveness']),
+        speechiness: d3.mean(dataList, d => d['speechiness']),
+        valence: d3.mean(dataList, d => d['valence'])
+    }
+}
+
 csv('http://vis.lab.djosix.com:2020/data/spotify_tracks.csv')
     .then(loadedData => {
         loadedData.forEach(d => {
@@ -175,16 +188,10 @@ csv('http://vis.lab.djosix.com:2020/data/spotify_tracks.csv')
         });
 
         data = loadedData;
+        allData = data;
 
-        radarData = [{
-            acousticness: d3.mean(data, d => d['acousticness']),
-            danceability: d3.mean(data, d => d['danceability']),
-            energy: d3.mean(data, d => d['energy']),
-            instrumentalness: d3.mean(data, d => d['instrumentalness']),
-            liveness: d3.mean(data, d => d['liveness']),
-            speechiness: d3.mean(data, d => d['speechiness']),
-            valence: d3.mean(data, d => d['valence'])
-        }];
+        radarData = [];
+        radarData.push(getRadarObject(data));
 
         render();
     });
