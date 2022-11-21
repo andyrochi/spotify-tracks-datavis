@@ -311,7 +311,8 @@ const render = () => {
         selectedGenre,
         xAxis: xAxisViolin,
         chosenAttribute: chosenViolinAttribute,
-        data
+        data,
+        colorScheme: accent
     });
 
     const legendProps = {

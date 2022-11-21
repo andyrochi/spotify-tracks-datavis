@@ -8,6 +8,7 @@ export const violinPlot = (selection, props) => {
         selectedGenre,
         xAxis,
         chosenAttribute,
+        colorScheme,
         data
     } = props;
 
@@ -68,9 +69,9 @@ export const violinPlot = (selection, props) => {
             path
                 .join("path")
             
-                .style("stroke", "#69b3a2")
-                .style("fill","#69b3a2")
-                .style("fill-opacity", 0.3)
+                // .style("stroke", colorScheme(i))
+                .style("fill", colorScheme(i))
+                .style("fill-opacity", 0.5)
                 .attr("d", d3.area()
                     .x0(function(d){ return(xNum(-d.length)) } )
                     .x1(function(d){ return(xNum(d.length)) } )
