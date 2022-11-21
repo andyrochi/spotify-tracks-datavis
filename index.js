@@ -129,8 +129,8 @@ const accent = d3.scaleOrdinal(d3.schemeAccent);
 
 // Violin Plot Stuff
 
-const marginViolin = {top: 10, right: 30, bottom: 30, left: 40},
-    widthViolin = 460 - marginViolin.left - marginViolin.right,
+const marginViolin = {top: 10, right: 30, bottom: 30, left: 55},
+    widthViolin = 600 - marginViolin.left - marginViolin.right,
     heightViolin = 400 - marginViolin.top - marginViolin.bottom;
 
 let chosenViolinAttribute = 'acousticness';
