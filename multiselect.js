@@ -109,53 +109,32 @@ export const MultiSelectDropdown = (params) => {
         div.dropdownListWrapper = dropdownListWrapper;
   
         div.refresh = () => {
-          div.querySelectorAll('span.optext, span.placeholder').forEach((placeholder) => div.removeChild(placeholder));
-          let selected = Array.from(multiSelect.selectedOptions);
-          if (selected.length > (multiSelect.attributes['max-items']?.value ?? 5)) {
-            div.appendChild(
-              newElement('span', {
-                class: ['optext', 'maxselected'],
-                text: selected.length + ' ' + config.txtSelected
-              })
-            );
-            // For demo purposes, remove
-            // tempSelectedList
-            //   .querySelectorAll('span')
-            //   .forEach((span, index) => index !== 0 && tempSelectedList.removeChild(span));
-            // selected.map((option) => tempSelectedList.appendChild(newElement('span', { text: option.text })));
-          } else {
-            // // For demo purposes, remove
-            // tempSelectedList
-            //   .querySelectorAll('span')
-            //   .forEach((span, index) => index !== 0 && tempSelectedList.removeChild(span));
+            div.querySelectorAll('span.optext, span.placeholder').forEach((placeholder) => div.removeChild(placeholder));
+            let selected = Array.from(multiSelect.selectedOptions);
             selected.map((option) => {
-              let span = newElement('span', {
+                let span = newElement('span', {
                 class: 'optext',
                 text: option.text,
                 srcElement: option
-              });
-              if (!config.hideX) {
+                });
+                if (!config.hideX) {
                 span.appendChild(
-                  newElement('span', {
+                    newElement('span', {
                     class: 'optdel',
                     text: '🗙',
                     title: config.txtRemove,
                     onclick: (e) => {
-                      span.srcElement.optionElement.dispatchEvent(new Event('click'));
-                      div.refresh();
-                      e.stopPropagation();
+                        span.srcElement.optionElement.dispatchEvent(new Event('click'));
+                        div.refresh();
+                        e.stopPropagation();
                     }
-                  })
+                    })
                 );
-              }
-              div.appendChild(span);
-            //   // For demo purposes, remove
-            //   tempSelectedList.appendChild(newElement('span', { text: option.text }));
+                }
+                div.appendChild(span);
             });
-          }
           if (multiSelect.selectedOptions?.length === 0) {
-            console.log('test empty selected.');
-            console.log(multiSelect.querySelector('option[value=all-genres]'));
+            // force all-genres to be selected
             const allGenreOption = multiSelect.querySelector('option[value=all-genres]');
             allGenreOption.selected = true;
             const allGenreOptionDiv = document.querySelector('div.all-genres');
@@ -171,8 +150,6 @@ export const MultiSelectDropdown = (params) => {
             //   })
             // );
             
-            // // For demo purposes, remove
-            // tempSelectedList.appendChild(newElement('span', { text: 'n/a' }));
           }
           doNotRefresh = true;
           config.render();
