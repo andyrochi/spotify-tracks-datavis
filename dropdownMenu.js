@@ -18,4 +18,5 @@ export const dropdownMenu = (selection, props) => {
             .attr('value', d => d)
             .property('selected', d => d === selectedOption)
             .text(d => d);
+    option.exit().remove();
 }
