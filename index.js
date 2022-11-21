@@ -8,7 +8,6 @@ import { colorLegend } from './colorLegend.js';
 
 let data = {};
 let chosenAttribute = 'acousticness';
-let radarData = {};
 let allData = {};
 
 const attributes = [
@@ -40,7 +39,7 @@ const xMax = {
 
 const key_signature_map = ["C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"];
 const mode_map = ["minor", "major"];
-const selectedGenre = ['j-pop', 'mandopop', 'all genres'];
+const selectedGenre = ['j-pop', 'mandopop', 'j-idol'];
 
 // set the dimensions and margins of the graph
 const margin = {top: 10, right: 30, bottom: 30, left: 50},
@@ -159,8 +158,6 @@ const render = () => {
         const uJoin = u
             .join("rect");
 
-        console.log('uJoin', uJoin);
-
         uJoin // Add a new rect for each new elements
             // .attr("class", `rect-${i}`)
             .transition() // and apply changes to all of them
@@ -199,7 +196,7 @@ const render = () => {
         'valence'
     ];
 
-    radarPlot(svgRadar, ticks, svgRadarDim, radarLabels, radarData);
+    radarPlot(svgRadar, ticks, svgRadarDim, radarLabels, data, selectedGenre, accent);
     
     // set the dimensions and margins of the graph
     const marginBar = {top: 20, right: 30, bottom: 40, left: 90},
@@ -218,12 +215,10 @@ const render = () => {
         .append('g')
         .attr('class', 'container');
     
-    console.log('legendGEnter:', legendGEnter);
     const translatedLegend = legendGEnter.merge(legendG)
         .attr('transform',
             `translate(${40},${30})`);
 
-    console.log(translatedLegend);
     const legendProps = {
         colorScale: accent,
         circleRadius: 1.0,
@@ -253,18 +248,6 @@ const debouncedResize = debounce(() => render());
 
 const resize = addEventListener('resize', debouncedResize);
 
-const getRadarObject = (dataList) => {
-    return {
-        acousticness: d3.mean(dataList, d => d['acousticness']),
-        danceability: d3.mean(dataList, d => d['danceability']),
-        energy: d3.mean(dataList, d => d['energy']),
-        instrumentalness: d3.mean(dataList, d => d['instrumentalness']),
-        liveness: d3.mean(dataList, d => d['liveness']),
-        speechiness: d3.mean(dataList, d => d['speechiness']),
-        valence: d3.mean(dataList, d => d['valence'])
-    }
-}
-
 csv('http://vis.lab.djosix.com:2020/data/spotify_tracks.csv')
     .then(loadedData => {
         loadedData.forEach(d => {
@@ -287,9 +270,6 @@ csv('http://vis.lab.djosix.com:2020/data/spotify_tracks.csv')
 
         data = loadedData;
         allData = data;
-
-        radarData = [];
-        radarData.push(getRadarObject(data));
 
         render();
     });
