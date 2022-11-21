@@ -19,9 +19,14 @@ export const violinPlot = (selection, props) => {
         .attr("transform",
         "translate(" + margin.left + "," + margin.top + ")");
     
+    const filteredData = selectedGenre.map(selected_genre => data.filter((d) => selected_genre === 'all-genres' ? true : d['track_genre'] === selected_genre));
+
+    const minEachGenre = filteredData.map((data) => d3.min(data, (d) => d[chosenAttribute]));
+    const minY = Math.min(...minEachGenre, 0);
+    console.log(minEachGenre);
     // Build and Show the Y scale
     const y = d3.scaleLinear()
-        .domain([0, yMax[chosenAttribute]])
+        .domain([minY, yMax[chosenAttribute]])
         .range([height, 0]);
     
     yAxis
@@ -31,7 +36,7 @@ export const violinPlot = (selection, props) => {
     const x = d3.scaleBand()
     .range([ 0, width ])
     .domain(selectedGenre)
-    .padding(0.1);
+    .padding(0.05);
 
     xAxis
         .attr("transform", "translate(0," + height + ")")
@@ -44,14 +49,15 @@ export const violinPlot = (selection, props) => {
         .value(d => d[chosenAttribute]);
 
     // And apply this function to data to get the bins
-    let bins = selectedGenre.map(selected_genre => histogram(data.filter((d) => selected_genre === 'all-genres' ? true : d['track_genre'] === selected_genre)));
-    const binMax = bins.map((bin) => (d3.max(bin, (d) => d.length)));
-    const maxNum = Math.max(...binMax);
+    let bins = selectedGenre.map((selected_genre,i) => histogram(filteredData[i]));
+    const binSum = bins.map((bin) => (d3.sum(bin, (d) => d.length)));
+    console.log('binSum:', binSum);
+    // const maxNum = Math.max(...binMax);
     
     const xNum = 
         d3.scaleLinear()
         .range([0, x.bandwidth()])
-        .domain([-maxNum,maxNum]);
+        .domain([-0.7, 0.7]);
 
     const vioPlotsG = svg
         .selectAll("g.myViolin")
@@ -61,20 +67,22 @@ export const violinPlot = (selection, props) => {
             .append("g")
             .attr("class", "myViolin")
         .merge(vioPlotsG)
+
         .attr("transform", (d, i) => { return `translate(${x(selectedGenre[i])}, 0)`})
         .each(function(d, i) {
             const cur = d3.select(this);
             const path = cur.selectAll("path")
                 .data([d]);
-            path
-                .join("path")
-            
-                // .style("stroke", colorScheme(i))
+            const pathJoin = path
+                .join("path");
+            pathJoin
+                .transition()
+                .duration(1000)
                 .style("fill", colorScheme(i))
                 .style("fill-opacity", 0.5)
                 .attr("d", d3.area()
-                    .x0(function(d){ return(xNum(-d.length)) } )
-                    .x1(function(d){ return(xNum(d.length)) } )
+                    .x0(function(d){ return(xNum(-d.length/binSum[i])) } )
+                    .x1(function(d){ return(xNum(d.length/binSum[i])) } )
                     .y(function(d){ return(y(d.x0)) } )
                 .curve(d3.curveCatmullRom)    // This makes the line smoother to give the violin appearance. Try d3.curveStep to see the difference
             );
