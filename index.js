@@ -7,6 +7,7 @@ import { barChart } from './barChart.js';
 import { colorLegend } from './colorLegend.js';
 import { MultiSelectDropdown } from './multiselect.js';
 import { dropdownMenu } from './dropdownMenu.js';
+import { violinPlot } from './violinPlot.js';
 
 let data = {};
 let chosenAttribute = 'acousticness';
@@ -150,6 +151,17 @@ for(let i = 0; i < attributes.length; i++) {
     selectViolinAttribute.appendChild(el);
 }
 
+const svgViolin = d3
+                .select("#violin-plot");
+svgViolin.append("g");
+const yAxisViolin = svgViolin
+    .select("g")
+    .append("g");
+
+const xAxisViolin = svgViolin
+    .select("g")
+    .append("g");
+
 // Violin Plot stuff done.
 
 const render = () => {
@@ -289,6 +301,18 @@ const render = () => {
     const translatedLegend = legendGEnter.merge(legendG)
         .attr('transform',
             `translate(${40},${30})`);
+
+    violinPlot(svgViolin, {
+        margin: marginViolin,
+        width: widthViolin,
+        height: heightViolin,
+        yMax: xMax,
+        yAxis: yAxisViolin,
+        selectedGenre,
+        xAxis: xAxisViolin,
+        chosenAttribute: chosenViolinAttribute,
+        data
+    });
 
     const legendProps = {
         colorScale: accent,
