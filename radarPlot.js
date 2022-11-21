@@ -118,26 +118,40 @@ export const radarPlot = (
         return coordinates;
     }
 
-    selectedGenre.forEach((genre, i) => {
-        const pathSelector = `path.plot-${i}`;
-        const plotI = `plot-${i}`;
-        const filteredData = data.filter((d) => { return genre === 'all-genres' ? true : d['track_genre'] === genre});
-        const radarData = [getRadarObject(filteredData)];
-        const radarPaths = svgRadar.selectAll(pathSelector)
-            .data(radarData);
-        
-        radarPaths.join("path")
-            .datum((d) => {
-                const path = getPathCoordinates(d);
-                path.push(path[0]);
-                return path;
-            })
-            .attr("class", plotI)
-            .attr("d", d => lineDraw(d))
-            .attr("stroke", (d) => colorScale(i))
-            .attr("stroke-width", 3)
-            .attr("fill", (d) => colorScale(i))
-            .attr("fill-opacity", 0.3)
-            .attr("stroke-opacity", 1);
-    });
+    const plotG = 
+        svgRadar
+            .selectAll("g.radar-plot")
+            .data(selectedGenre);
+    
+    const plotGEnter = plotG
+        .enter()
+            .append("g")
+            .attr("class", "radar-plot")
+        .merge(plotG)
+        .each(function (genre, i) {
+            const thisG = d3.select(this);
+            const pathSelector = `path.plot-${i}`;
+            const plotI = `plot-${i}`;
+            const filteredData = data.filter((d) => { return genre === 'all-genres' ? true : d['track_genre'] === genre});
+            const radarData = [getRadarObject(filteredData)];
+            const radarPaths = thisG.selectAll(pathSelector)
+                .data(radarData);
+            
+            radarPaths.join("path")
+                .datum((d) => {
+                    const path = getPathCoordinates(d);
+                    path.push(path[0]);
+                    return path;
+                })
+                .attr("class", plotI)
+                .attr("d", d => lineDraw(d))
+                .attr("stroke", (d) => colorScale(i))
+                .attr("stroke-width", 3)
+                .attr("fill", (d) => colorScale(i))
+                .attr("fill-opacity", 0.3)
+                .attr("stroke-opacity", 1);
+        });
+    
+    plotG.exit().remove();
+
 };
