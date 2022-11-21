@@ -119,6 +119,7 @@ const accent = d3.scaleOrdinal(d3.schemeAccent);
 const render = () => {
     // X axis: scale and draw:
     console.log('render');
+
     queryDomSelectedGenres();
 
     const x = d3.scaleLinear()
@@ -136,7 +137,6 @@ const render = () => {
     const thresholds = x.ticks(nBin);
     thresholds.pop();
 
-    // console.log('hack:', thresholds);
     // dynamic rendering
     // set the parameters for the histogram
     const histogram = d3.histogram()
@@ -156,11 +156,11 @@ const render = () => {
         .transition()
         .duration(1000)
         .call(d3.axisLeft(y));
-    
-    bins.forEach((bin, i) => {
-        const cssSelector = `.rect-${i}`;
 
-        const u = svg.selectAll(cssSelector)
+    function addRectangles(bin, i, node) {
+        const cssSelector = 'rect';
+        const svg2 = d3.select(this);
+        const u = svg2.selectAll(cssSelector)
             .data(bin);
 
         // Manage the existing bars and eventually the new ones:
@@ -172,7 +172,7 @@ const render = () => {
             .transition() // and apply changes to all of them
             .duration(1000)
                 .attr("x", 1)
-                .attr("class", function(d, j) { return `rect-bin-${j}` + " " + `rect-${i}`} )
+                .attr("class", function(d, j) { return `rect-bin-${j}`} )
                 .attr("transform", function(d) { return `translate(${x(d.x0)}, ${y(d.length)})`})
                 .attr("width", function(d) { return x(d.x1) - x(d.x0) - 1; })
                 .attr("height", function(d) { return height - y(d.length); })
@@ -183,10 +183,23 @@ const render = () => {
             .on("mousemove", mousemoveHistogram)
             .on("mouseleave", mouseleaveHistogram);
 
-    })
+    };
+    
+    // use groups to manage enter and exit
+    const rectGs = svg.selectAll("g.rect-g")
+        .data(bins);
+
+    const rectGsEnter = rectGs
+        .enter()
+            .append("g")
+            .attr("class", "rect-g")
+        .merge(rectGs)
+        .each(addRectangles);
+    rectGs.exit().remove();
     
     const allRects = svg.selectAll("rect");
-    allRects.sort((a, b) =>  b.length - a.length );
+    // TODO: find a way to deal with this
+    // allRects.sort((a, b) =>  b.length - a.length );
     
     // radial chart
     const ticks = [0.2, 0.4, 0.6, 0.8];
@@ -303,5 +316,6 @@ csv('http://vis.lab.djosix.com:2020/data/spotify_tracks.csv')
             render
         });
 
-        render();
+        // TODO: fix double render bug
+        // render();
     });
