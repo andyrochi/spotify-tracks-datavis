@@ -41,6 +41,12 @@ const xMax = {
 const key_signature_map = ["C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"];
 const mode_map = ["minor", "major"];
 let selectedGenre = ['j-pop', 'mandopop', 'j-idol'];
+const queryDomSelectedGenres = () => {
+    const genreSearch = document.querySelector('select[multiple]#genre-search');
+    const selectedOptions = Array.from(genreSearch.selectedOptions);
+    const selected = selectedOptions.map((option) => option.value);
+    selectedGenre = selected;
+}
 
 // set the dimensions and margins of the graph
 const margin = {top: 10, right: 30, bottom: 30, left: 50},
@@ -113,6 +119,8 @@ const accent = d3.scaleOrdinal(d3.schemeAccent);
 const render = () => {
     // X axis: scale and draw:
     console.log('render');
+    queryDomSelectedGenres();
+
     const x = d3.scaleLinear()
         .domain([0, xMax[chosenAttribute]])
         .range([0, width]);
@@ -174,6 +182,7 @@ const render = () => {
             .on("mouseover", mouseoverHistogram)
             .on("mousemove", mousemoveHistogram)
             .on("mouseleave", mouseleaveHistogram);
+
     })
     
     const allRects = svg.selectAll("rect");
