@@ -186,7 +186,8 @@ const render = () => {
         mousemoveHistogram,
         mouseleaveHistogram,
         accent,
-        data
+        data,
+        showGenre: barChartGenreSelected,
     });
     // const allRects = svg.selectAll("rect");
     // TODO: find a way to deal with this

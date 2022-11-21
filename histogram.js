@@ -12,6 +12,7 @@ export const histogram = (selection, props) => {
         mouseoverHistogram,
         mousemoveHistogram,
         mouseleaveHistogram,
+        showGenre,
         accent,
         data
     } = props;
@@ -40,18 +41,22 @@ export const histogram = (selection, props) => {
 
 
     // And apply this function to data to get the bins
-    let bins = selectedGenre.map(selected_genre => histogram(data.filter((d) => selected_genre === 'all-genres' ? true : d['track_genre'] === selected_genre)));
+    let bins = histogram(data.filter((d) => showGenre === 'all-genres' ? true : d['track_genre'] === showGenre));
 
-    const binMax = bins.map((bin) => (d3.max(bin, (d) => d.length)));
+    // const binMax = bins.map((bin) => (d3.max(bin, (d) => d.length)));
+    const binMax = d3.max(bins, (d) => d.length);
+
+    console.log(binMax);
 
     // Y axis: update now that we know the domain, remember to desconstruct
-    y.domain([0, Math.max(...binMax)]);   // d3.hist has to be called before the Y axis obviously
+    y.domain([0, binMax]);   // d3.hist has to be called before the Y axis obviously
+
     yAxis
         .transition()
         .duration(1000)
         .call(d3.axisLeft(y));
 
-    function addRectangles(bin, i, node) {
+    function addRectangles(bin, i) {
         const cssSelector = 'rect';
         const svg2 = d3.select(this);
         const u = svg2.selectAll(cssSelector)
@@ -71,7 +76,7 @@ export const histogram = (selection, props) => {
                 .attr("width", function(d) { return x(d.x1) - x(d.x0) - 1; })
                 .attr("height", function(d) { return height - y(d.length); })
                 .attr("opacity", defaultOpacity)
-                .style("fill", () => {return accent(i)});
+                .style("fill", () => {return accent(selectedGenre.indexOf(showGenre))});
         uJoin
             .on("mouseover", mouseoverHistogram)
             .on("mousemove", mousemoveHistogram)
@@ -81,7 +86,7 @@ export const histogram = (selection, props) => {
 
     // use groups to manage enter and exit
     const rectGs = selection.selectAll("g.rect-g")
-        .data(bins);
+        .data([bins]);
 
     const rectGsEnter = rectGs
         .enter()
