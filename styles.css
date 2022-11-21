@@ -16,7 +16,7 @@ body {
 }
 
 .svg-container {
-    width: 100%;
+    /* width: 100%; */
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -24,7 +24,7 @@ body {
 }
 
 .radar-container {
-    width: 100%;
+    /* width: 100%; */
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -32,7 +32,7 @@ body {
 }
 
 .bar-chart-container {
-    width: 100%;
+    /* width: 100%; */
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -60,6 +60,11 @@ text {
 .description .title {
     font-size: 1.2rem;
     color: gray;
+}
+
+div.legend {
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 /*   
 .tick text {

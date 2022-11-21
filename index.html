@@ -25,26 +25,28 @@
             </button>
         </div>
     </nav>
-
-    <div class="svg-container">
-        Distribution of Numeric Attributes
-        <svg id="plot"></svg>
-        <label for="attribute">Selected attribute</label>
-        <select name="attribute" id="selectAttribute" aria-label="select display">
-            <option disabled>-- Choose an attribute --</option>
-        </select>
-    </div>
-    <div class="radar-container">
-        <svg id="radar-chart"></svg>
-    </div>
-    <div class="bar-chart-container">
-        <svg id="bar-chart"></svg>
-        <div id="bar-chart-genre">
+    <div class="d-flex">
+        <div class="svg-container">
+            Distribution of Numeric Attributes
+            <svg id="plot"></svg>
+            <label for="attribute">Selected attribute</label>
+            <select name="attribute" id="selectAttribute" aria-label="select display">
+                <option disabled>-- Choose an attribute --</option>
+            </select>
+        </div>
+        <div class="radar-container">
+            <svg id="radar-chart"></svg>
+        </div>
+        <div class="bar-chart-container">
+            <svg id="bar-chart"></svg>
+            <div id="bar-chart-genre">
+            </div>
+        </div>
+        <div class="legend">
+            <svg id="legend"></svg>
         </div>
     </div>
-    <div class="legend">
-        <svg id="legend"></svg>
-    </div>
+   
 
     <div class="content">
         <h1 class="title">

@@ -60,8 +60,8 @@ const onBarChartGenreClicked = (genre) => {
 
 // set the dimensions and margins of the graph
 const margin = {top: 10, right: 30, bottom: 30, left: 50},
-width = 460 - margin.left - margin.right,
-height = 400 - margin.top - margin.bottom;
+width = 360 - margin.left - margin.right,
+height = 300 - margin.top - margin.bottom;
 let nBin = 10;
 
 const defaultOpacity = 0.5;
@@ -214,7 +214,7 @@ const render = () => {
     // radial chart
     const ticks = [0.2, 0.4, 0.6, 0.8];
     const radarMaxTick = ticks[ticks.length - 1];
-    const svgRadarDim = 600;
+    const svgRadarDim = 400;
     const svgRadar = select(".radar-container #radar-chart")
     .attr("width", svgRadarDim)
     .attr("height", svgRadarDim);
@@ -241,13 +241,15 @@ const render = () => {
 
     // set the dimensions and margins of the graph
     const marginBar = {top: 20, right: 30, bottom: 40, left: 90},
-        widthBarSvg = 460,
-        heightBarSvg = 400;
+        widthBarSvg = 360,
+        heightBarSvg = 300;
     const filteredBarData = data.filter((d => { return barChartGenreSelected === 'all-genres' ? true : d['track_genre'] === barChartGenreSelected }));
     
 
     barChart(svgBar, marginBar, heightBarSvg, widthBarSvg, key_signature_map, mode_map, filteredBarData, accent(selectedGenre.indexOf(barChartGenreSelected)));
-    const legendSvg = d3.select('svg#legend');
+    const legendSvg = d3
+        .select('svg#legend')
+        .attr("height", Math.max(150, 30 * selectedGenre.length));
     const legendG = 
         legendSvg.selectAll('g.container')
             .data([null]);
