@@ -121,7 +121,7 @@ export const radarPlot = (
     selectedGenre.forEach((genre, i) => {
         const pathSelector = `path.plot-${i}`;
         const plotI = `plot-${i}`;
-        const filteredData = data.filter((d) => { return genre === 'all genres' ? true : d['track_genre'] === genre});
+        const filteredData = data.filter((d) => { return genre === 'all-genres' ? true : d['track_genre'] === genre});
         const radarData = [getRadarObject(filteredData)];
         const radarPaths = svgRadar.selectAll(pathSelector)
             .data(radarData);

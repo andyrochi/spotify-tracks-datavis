@@ -5,6 +5,7 @@ const {
 import { radarPlot } from './radarPlot.js';
 import { barChart } from './barChart.js';
 import { colorLegend } from './colorLegend.js';
+import { MultiSelectDropdown } from './multiselect.js';
 
 let data = {};
 let chosenAttribute = 'acousticness';
@@ -39,7 +40,7 @@ const xMax = {
 
 const key_signature_map = ["C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"];
 const mode_map = ["minor", "major"];
-const selectedGenre = ['j-pop', 'mandopop', 'j-idol'];
+let selectedGenre = ['j-pop', 'mandopop', 'j-idol'];
 
 // set the dimensions and margins of the graph
 const margin = {top: 10, right: 30, bottom: 30, left: 50},
@@ -137,7 +138,7 @@ const render = () => {
     
     
     // And apply this function to data to get the bins
-    let bins = selectedGenre.map(selected_genre => histogram(data.filter((d) => selected_genre === 'all genres' ? true : d['track_genre'] === selected_genre)));
+    let bins = selectedGenre.map(selected_genre => histogram(data.filter((d) => selected_genre === 'all-genres' ? true : d['track_genre'] === selected_genre)));
 
     const binMax = bins.map((bin) => (d3.max(bin, (d) => d.length)));
 
@@ -248,28 +249,50 @@ const debouncedResize = debounce(() => render());
 
 const resize = addEventListener('resize', debouncedResize);
 
+const genreSet = new Set();
+
 csv('http://vis.lab.djosix.com:2020/data/spotify_tracks.csv')
     .then(loadedData => {
         loadedData.forEach(d => {
-        // fields
-        d['acousticness'] = +d['acousticness'];
-        d['danceability'] = +d['danceability'];
-        d['duration_ms'] = +d['duration_ms'];
-        d['energy'] = +d['energy'];
-        d['instrumentalness'] = +d['instrumentalness'];
-        d['liveness'] = +d['liveness'];
-        d['loudness'] = +d['loudness'];
-        d['mode'] = +d['mode'];
-        d['popularity'] = +d['popularity'];
-        d['speechiness'] = +d['speechiness'];
-        d['tempo'] = +d['tempo'];
-        d['time_signature'] = +d['time_signature'];
-        d['valence'] = +d['valence'];
-        d['key'] = +d['key'];
+            // fields
+            d['acousticness'] = +d['acousticness'];
+            d['danceability'] = +d['danceability'];
+            d['duration_ms'] = +d['duration_ms'];
+            d['energy'] = +d['energy'];
+            d['instrumentalness'] = +d['instrumentalness'];
+            d['liveness'] = +d['liveness'];
+            d['loudness'] = +d['loudness'];
+            d['mode'] = +d['mode'];
+            d['popularity'] = +d['popularity'];
+            d['speechiness'] = +d['speechiness'];
+            d['tempo'] = +d['tempo'];
+            d['time_signature'] = +d['time_signature'];
+            d['valence'] = +d['valence'];
+            d['key'] = +d['key'];
+
+            genreSet.add(d['track_genre']);
         });
 
         data = loadedData;
         allData = data;
+
+        const genreList = Array.from(genreSet);
+        genreList.unshift("all-genres");
+        const genreSearch = d3.select("#genre-search");
+
+        genreList.forEach((genre) => {
+        genreSearch
+            .selectAll("option")
+            .data(genreList)
+            .enter()
+            .append("option")
+            .text((d) => d)
+            .attr("value", (d) => d);
+        })
+
+        MultiSelectDropdown({
+            render
+        });
 
         render();
     });
