@@ -4,6 +4,7 @@ const {
 } = d3;
 import { radarPlot } from './radarPlot.js';
 import { barChart } from './barChart.js';
+import { colorLegend } from './colorLegend.js';
 
 let data = {};
 let chosenAttribute = 'acousticness';
@@ -39,7 +40,7 @@ const xMax = {
 
 const key_signature_map = ["C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"];
 const mode_map = ["minor", "major"];
-const selectedGenre = ['j-rock', 'j-pop'];
+const selectedGenre = ['j-pop', 'mandopop'];
 
 // set the dimensions and margins of the graph
 const margin = {top: 10, right: 30, bottom: 30, left: 50},
@@ -208,7 +209,32 @@ const render = () => {
         heightBarSvg = 400;
     
     barChart(svgBar, marginBar, heightBarSvg, widthBarSvg, key_signature_map, mode_map, data);
+    const legendSvg = d3.select('svg#legend');
+    const legendG = 
+        legendSvg.selectAll('g.container')
+            .data([null]);
+
+    const legendGEnter = 
+        legendG
+        .enter()
+        .append('g')
+        .attr('class', 'container');
     
+    console.log('legendGEnter:', legendGEnter);
+    const translatedLegend = legendGEnter.merge(legendG)
+        .attr('transform',
+            `translate(${40},${30})`);
+
+    console.log(translatedLegend);
+    const legendProps = {
+        colorScale: accent,
+        circleRadius: 1.0,
+        circleRadius: 10,
+        spacing: 40,
+        textOffset: 20,
+        selectedGenre
+      };
+    colorLegend(translatedLegend, legendProps);
 };
 
 

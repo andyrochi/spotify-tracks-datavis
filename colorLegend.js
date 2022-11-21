@@ -4,14 +4,17 @@ export const colorLegend = (selection, props) => {
       circleRadius,
       spacing,
       textOffset,
-      highlight,
-      unhighlight,
-      filterData,
-      classData
+      selectedGenre
     } = props;
-  
+    
+    let selectedGenreLocal = selectedGenre;
+
+    if (selectedGenre.length === 0) {
+      selectedGenreLocal = ['AllGenres'];
+    }
+
     const groups = selection.selectAll('g')
-      .data(colorScale.domain());
+      .data(selectedGenreLocal);
     const groupsEnter = groups
       .enter().append('g')
         .attr('class', 'tick');
@@ -25,14 +28,11 @@ export const colorLegend = (selection, props) => {
     groupsEnter.append('circle')
       .merge(groups.select('circle'))
         .attr('r', circleRadius)
-        .attr('fill', (d) => {
-          if(classData[d].filtered) return 'lightgrey'
-          else return colorScale(d)
+        .attr('fill', (d, i) => {
+          // if(classData[d].filtered) return 'lightgrey'
+          return colorScale(i);
         })
-        .style('cursor', 'pointer')
-        .on("mouseover", (event, d) => {highlight(event, {class: d})})
-        .on("mouseleave", (event, d) => {unhighlight(event, {class: d})})
-        .on("click", filterData);
+        .style('cursor', 'pointer');
   
     groupsEnter.append('text')
       .merge(groups.select('text'))
@@ -40,8 +40,5 @@ export const colorLegend = (selection, props) => {
         .attr('dy', '0.32em')
         .attr('x', textOffset)
         .attr('class', d => `text-${d}`)
-        .style('cursor', 'pointer')
-        .on("mouseover", (event, d) => {highlight(event, {class: d})})
-        .on("mouseleave", (event, d) => {unhighlight(event, {class: d})})
-        .on("click", filterData);
+        .style('cursor', 'pointer');
   }
