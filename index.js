@@ -36,6 +36,9 @@ const xMax = {
     'tempo': 260
 };
 
+const key_signature_map = ["C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"];
+const mode_map = ["minor", "major"];
+
 // set the dimensions and margins of the graph
 const margin = {top: 10, right: 30, bottom: 30, left: 50},
 width = 460 - margin.left - margin.right,
@@ -95,6 +98,15 @@ d3.select(this)
     .style("stroke", "none")
     .style("opacity", 0.8)
 }
+
+// set the dimensions and margins of the graph
+const marginBar = {top: 20, right: 30, bottom: 40, left: 90},
+    widthBar = 460 - marginBar.left - marginBar.right,
+    heightBar = 400 - marginBar.top - marginBar.bottom;
+
+const svgBar = d3
+                .select("#bar-chart");
+svgBar.append("g");
 
 const render = () => {
     // X axis: scale and draw:
@@ -175,6 +187,53 @@ const render = () => {
 
     radarPlot(svgRadar, ticks, svgRadarDim, radarLabels, radarData);
     
+    // bar chart data
+    const dataBar = new Array(key_signature_map.length * mode_map.length).fill({value: 0, pitch: ""});
+    console.log(dataBar);
+    for (let i = 0; i < key_signature_map.length; i++) {
+        for (let j = 0; j < mode_map.length; j++) {
+            dataBar[i * mode_map.length + j]['pitch'] = `${key_signature_map[i]} ${mode_map[j]}`;
+            console.log(`${key_signature_map[i]} ${mode_map[j]}`);
+        }
+    }
+    
+
+    // bar chart
+    svgBar
+        .attr("width", widthBar + marginBar.left + marginBar.right)
+        .attr("height", heightBar + marginBar.top + marginBar.bottom);
+    const svgBarG = svgBar.select("g")
+        .attr("transform", `translate(${marginBar.left}, ${marginBar.top})`);
+    
+        // Add X axis
+    const xBar = d3.scaleLinear()
+        .domain([0, 13000])
+        .range([ 0, widthBar]);
+        svgBarG.append("g")
+        .attr("transform", `translate(0, ${heightBar})`)
+        .call(d3.axisBottom(xBar))
+        .selectAll("text")
+            .attr("transform", "translate(-10,0)rotate(-45)")
+            .style("text-anchor", "end");
+    
+    // Y axis
+    const yBar = d3.scaleBand()
+    .range([ 0, heightBar ])
+    .domain(data.map(d => `${key_signature_map[d.key]} ${mode_map[d.mode]}`))
+    .padding(.1);
+    svgBarG.append("g")
+    .call(d3.axisLeft(yBar));
+
+    //Bars
+    svgBarG.selectAll("myRect")
+    .data(data)
+    .join("rect")
+    .attr("x", xBar(0) )
+    .attr("y", d => yBar(`${key_signature_map[d.key]} ${mode_map[d.mode]}`))
+    .attr("width", d => xBar(d.Value))
+    .attr("height", yBar.bandwidth())
+    .attr("fill", "#69b3a2");
+    
 };
 
 function debounce(func, timeout = 30) {
@@ -223,6 +282,7 @@ csv('http://vis.lab.djosix.com:2020/data/spotify_tracks.csv')
         d['tempo'] = +d['tempo'];
         d['time_signature'] = +d['time_signature'];
         d['valence'] = +d['valence'];
+        d['key'] = +d['key'];
         });
 
         data = loadedData;
