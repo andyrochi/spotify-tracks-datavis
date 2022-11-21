@@ -40,7 +40,7 @@ const xMax = {
 
 const key_signature_map = ["C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"];
 const mode_map = ["minor", "major"];
-const selectedGenre = ['j-pop', 'mandopop'];
+const selectedGenre = ['j-pop', 'mandopop', 'all genres'];
 
 // set the dimensions and margins of the graph
 const margin = {top: 10, right: 30, bottom: 30, left: 50},
@@ -138,9 +138,7 @@ const render = () => {
     
     
     // And apply this function to data to get the bins
-    let bins = selectedGenre.map(genre => histogram(data.filter((d) => d['track_genre'] === genre)));
-    if (bins.length === 0)
-        bins = [histogram(data)];
+    let bins = selectedGenre.map(selected_genre => histogram(data.filter((d) => selected_genre === 'all genres' ? true : d['track_genre'] === selected_genre)));
 
     const binMax = bins.map((bin) => (d3.max(bin, (d) => d.length)));
 
