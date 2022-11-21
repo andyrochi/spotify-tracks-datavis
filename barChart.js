@@ -1,4 +1,4 @@
-export const barChart = (svgBar, marginBar, height, width, key_signature_map, mode_map, data) => {
+export const barChart = (svgBar, marginBar, height, width, key_signature_map, mode_map, data, color) => {
     const widthBar = width - marginBar.left - marginBar.right;
     const heightBar = height - marginBar.top - marginBar.bottom;
     const computePitchCount = (data) => {
@@ -80,10 +80,11 @@ export const barChart = (svgBar, marginBar, height, width, key_signature_map, mo
         .attr("y", d => yBar(d.pitch))
         .attr("width", d => xBar(d.value))
         .attr("height", yBar.bandwidth())
-        .attr("fill", "#69b3a2");
+        .attr("fill", color)
+        .attr("fill-opacity", 0.7);
     
     u
         .exit()
         .remove();
-        
+
 }

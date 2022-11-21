@@ -245,7 +245,8 @@ const render = () => {
         heightBarSvg = 400;
     const filteredBarData = data.filter((d => { return barChartGenreSelected === 'all-genres' ? true : d['track_genre'] === barChartGenreSelected }));
     
-    barChart(svgBar, marginBar, heightBarSvg, widthBarSvg, key_signature_map, mode_map, filteredBarData);
+
+    barChart(svgBar, marginBar, heightBarSvg, widthBarSvg, key_signature_map, mode_map, filteredBarData, accent(selectedGenre.indexOf(barChartGenreSelected)));
     const legendSvg = d3.select('svg#legend');
     const legendG = 
         legendSvg.selectAll('g.container')
