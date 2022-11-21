@@ -6,6 +6,7 @@ import { radarPlot } from './radarPlot.js';
 import { barChart } from './barChart.js';
 import { colorLegend } from './colorLegend.js';
 import { MultiSelectDropdown } from './multiselect.js';
+import { dropdownMenu } from './dropdownMenu.js';
 
 let data = {};
 let chosenAttribute = 'acousticness';
@@ -46,6 +47,15 @@ const queryDomSelectedGenres = () => {
     const selectedOptions = Array.from(genreSearch.selectedOptions);
     const selected = selectedOptions.map((option) => option.value);
     selectedGenre = selected;
+    if (!selectedGenre.find(element => element === barChartGenreSelected))
+        barChartGenreSelected = selectedGenre[0];
+}
+
+let barChartGenreSelected = "all-genres";
+
+const onBarChartGenreClicked = (genre) => {
+    barChartGenreSelected = genre;
+    render();
 }
 
 // set the dimensions and margins of the graph
@@ -221,12 +231,21 @@ const render = () => {
 
     radarPlot(svgRadar, ticks, svgRadarDim, radarLabels, data, selectedGenre, accent);
     
+    // construct barChart select
+    select('#bar-chart-genre')
+        .call(dropdownMenu, {
+            options: selectedGenre,
+            onOptionClicked: onBarChartGenreClicked,
+            selectedOption: barChartGenreSelected
+        });
+
     // set the dimensions and margins of the graph
     const marginBar = {top: 20, right: 30, bottom: 40, left: 90},
         widthBarSvg = 460,
         heightBarSvg = 400;
+    const filteredBarData = data.filter((d => { return barChartGenreSelected === 'all-genres' ? true : d['track_genre'] === barChartGenreSelected }));
     
-    barChart(svgBar, marginBar, heightBarSvg, widthBarSvg, key_signature_map, mode_map, data);
+    barChart(svgBar, marginBar, heightBarSvg, widthBarSvg, key_signature_map, mode_map, filteredBarData);
     const legendSvg = d3.select('svg#legend');
     const legendG = 
         legendSvg.selectAll('g.container')

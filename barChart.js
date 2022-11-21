@@ -1,4 +1,3 @@
-// const {} = d3;
 export const barChart = (svgBar, marginBar, height, width, key_signature_map, mode_map, data) => {
     const widthBar = width - marginBar.left - marginBar.right;
     const heightBar = height - marginBar.top - marginBar.bottom;
@@ -63,16 +62,28 @@ export const barChart = (svgBar, marginBar, height, width, key_signature_map, mo
             .attr("class", "y-bar-axis");
     
     yBarAxisEnter.merge(yBarAxis)
+        .transition().duration(1000)
         .call(d3.axisLeft(yBar));
 
     //Bars
-    svgBarG.selectAll("myRect")
-    .data(dataBar)
-    .join("rect")
+    const u = svgBarG.selectAll(".myRect")
+        .data(dataBar);
+
+    u
+        .enter()
+            .append("rect")
+        .merge(u)
+        .transition()
+        .duration(1000)
         .attr("class", "myRect")
         .attr("x", xBar(0) )
         .attr("y", d => yBar(d.pitch))
         .attr("width", d => xBar(d.value))
         .attr("height", yBar.bandwidth())
         .attr("fill", "#69b3a2");
+    
+    u
+        .exit()
+        .remove();
+        
 }
