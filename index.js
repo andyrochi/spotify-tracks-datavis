@@ -126,6 +126,32 @@ svgBar.append("g");
 
 const accent = d3.scaleOrdinal(d3.schemeAccent);
 
+// Violin Plot Stuff
+
+const marginViolin = {top: 10, right: 30, bottom: 30, left: 40},
+    widthViolin = 460 - marginViolin.left - marginViolin.right,
+    heightViolin = 400 - marginViolin.top - marginViolin.bottom;
+
+let chosenViolinAttribute = 'acousticness';
+
+d3.select("#selectViolinAttribute").on("input", function() {
+    chosenViolinAttribute = this.value;
+    render();
+})
+
+const selectViolinAttribute = document.getElementById("selectViolinAttribute");
+
+// construct select menu
+for(let i = 0; i < attributes.length; i++) {
+    const opt = attributes[i];
+    const el = document.createElement("option");
+    el.textContent = opt;
+    el.value = opt;
+    selectViolinAttribute.appendChild(el);
+}
+
+// Violin Plot stuff done.
+
 const render = () => {
     // X axis: scale and draw:
     console.log('render');
