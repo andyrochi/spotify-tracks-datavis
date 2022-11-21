@@ -3,12 +3,26 @@ const {
     line,
 } = d3;
 
+const getRadarObject = (dataList) => {
+    return {
+        acousticness: d3.mean(dataList, d => d['acousticness']),
+        danceability: d3.mean(dataList, d => d['danceability']),
+        energy: d3.mean(dataList, d => d['energy']),
+        instrumentalness: d3.mean(dataList, d => d['instrumentalness']),
+        liveness: d3.mean(dataList, d => d['liveness']),
+        speechiness: d3.mean(dataList, d => d['speechiness']),
+        valence: d3.mean(dataList, d => d['valence'])
+    }
+}
+
 export const radarPlot = (
     svgRadar,
     ticks,
     svgRadarDim,
     radarLabels,
-    radarData
+    data,
+    selectedGenre,
+    colorScale
 ) => {
     const radarMaxTick = ticks[ticks.length - 1];
     const radarDim = svgRadarDim / 2;
@@ -104,18 +118,26 @@ export const radarPlot = (
         return coordinates;
     }
 
-    const radarPaths = svgRadar.selectAll("path.plots")
-        .data(radarData);
-
-    let colors = ["#69b3a2", "darkorange", "gray", "navy"];
-    
-    radarPaths.join("path")
-        .datum((d) => getPathCoordinates(d))
-        .attr("class", "plots")
-        .attr("d", d => lineDraw(d))
-        .attr("stroke", (d,i) => colors[i])
-        .attr("fill", (d, i) => colors[i])
-        .attr("stroke-opacity", 1)
-        .attr("opacity", 0.5);
-
+    selectedGenre.forEach((genre, i) => {
+        const pathSelector = `path.plot-${i}`;
+        const plotI = `plot-${i}`;
+        const filteredData = data.filter((d) => { return genre === 'all genres' ? true : d['track_genre'] === genre});
+        const radarData = [getRadarObject(filteredData)];
+        const radarPaths = svgRadar.selectAll(pathSelector)
+            .data(radarData);
+        
+        radarPaths.join("path")
+            .datum((d) => {
+                const path = getPathCoordinates(d);
+                path.push(path[0]);
+                return path;
+            })
+            .attr("class", plotI)
+            .attr("d", d => lineDraw(d))
+            .attr("stroke", (d) => colorScale(i))
+            .attr("stroke-width", 3)
+            .attr("fill", (d) => colorScale(i))
+            .attr("fill-opacity", 0.3)
+            .attr("stroke-opacity", 1);
+    });
 };
