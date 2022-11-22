@@ -19,12 +19,18 @@ let sliceThreshold = 50;
 let sortAscend = false;
 let sortAttribute = 'popularity';
 
+let showHiddenBarChartOption = true;
 
 
 const sortData = (data, field, ascend) => {
     const factor = ascend ? 1 : -1;
     data.sort((a, b) => factor * (a[field] - b[field]));
 };
+
+const legendAttributeSpan = document.querySelector("#legend-attribute");
+const legendOrderSpan = document.querySelector("#legend-order");
+const legendSliceSpan = document.querySelector("#legend-slice");
+
 
 const refreshDataAndRerender = () => {
     sortData(data, sortAttribute, sortAscend);
@@ -107,13 +113,16 @@ slicerElement.addEventListener('change', function(event) {
 const key_signature_map = ["C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"];
 const mode_map = ["minor", "major"];
 let selectedGenre = ['j-pop', 'mandopop', 'j-idol'];
+
 const queryDomSelectedGenres = () => {
     const genreSearch = document.querySelector('select[multiple]#genre-search');
     const selectedOptions = Array.from(genreSearch.selectedOptions);
     const selected = selectedOptions.map((option) => option.value);
     selectedGenre = selected;
-    if (!selectedGenre.find(element => element === barChartGenreSelected))
+    if (!selectedGenre.find(element => element === barChartGenreSelected)) {
         barChartGenreSelected = selectedGenre[0];
+    }
+        
 }
 
 let barChartGenreSelected = "all-genres";
@@ -248,8 +257,12 @@ const render = () => {
     // X axis: scale and draw:
     console.log('render');
 
+    // check chosen option
     queryDomSelectedGenres();
 
+    // decide hide or show genre count option
+    showHiddenBarChartOption = (barChartGenreSelected === 'all-genres') ? true : false;
+    console.log('showHiddenOption:', showHiddenBarChartOption);
     
     histogram(svg, {
         width,
@@ -362,6 +375,10 @@ const render = () => {
         radius,
         sliceThreshold
     });
+    
+    legendAttributeSpan.innerText = sortAttribute;
+    legendOrderSpan.innerText = sortAscend ? "ascending" : "descending";
+    legendSliceSpan.innerText = sliceThreshold;
 
 };
 
