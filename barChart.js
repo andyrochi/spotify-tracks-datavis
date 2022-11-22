@@ -1,6 +1,16 @@
-export const barChart = (svgBar, marginBar, height, width, key_signature_map, mode_map, data, color) => {
-    const widthBar = width - marginBar.left - marginBar.right;
-    const heightBar = height - marginBar.top - marginBar.bottom;
+export const barChart = (selection, props) => {
+    const {
+        margin, // marginBar,
+        height, 
+        width,
+        key_signature_map,
+        mode_map,
+        data,
+        color
+    } = props;
+
+    const widthBar = width - margin.left - margin.right;
+    const heightBar = height - margin.top - margin.bottom;
     const computePitchCount = (data) => {
         // bar chart data
         const dataBar = new Array(key_signature_map.length * mode_map.length).fill().map(() => ({value: 0, pitch: ""}));;
@@ -24,11 +34,11 @@ export const barChart = (svgBar, marginBar, height, width, key_signature_map, mo
         return b['value'] - a['value'];
     })
     // // bar chart
-    svgBar
-        .attr("width", widthBar + marginBar.left + marginBar.right)
-        .attr("height", heightBar + marginBar.top + marginBar.bottom);
-    const svgBarG = svgBar.select("g")
-        .attr("transform", `translate(${marginBar.left}, ${marginBar.top})`);
+    selection
+        .attr("width", widthBar + margin.left + margin.right)
+        .attr("height", heightBar + margin.top + margin.bottom);
+    const svgBarG = selection.select("g")
+        .attr("transform", `translate(${margin.left}, ${margin.top})`);
     
         // Add X axis
     const xBar = d3.scaleLinear()
@@ -41,6 +51,8 @@ export const barChart = (svgBar, marginBar, height, width, key_signature_map, mo
             .attr("class", "x-bar-axis");
         
         xBarEnter.merge(xBarAxis)
+            .transition()
+            .duration(1000)
             .attr("transform", `translate(0, ${heightBar})`)
             .call(d3.axisBottom(xBar))
         .selectAll("text")

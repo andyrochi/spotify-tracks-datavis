@@ -225,10 +225,23 @@ const render = () => {
     const marginBar = {top: 20, right: 30, bottom: 40, left: 90},
         widthBarSvg = 360,
         heightBarSvg = 300;
-    const filteredBarData = data.filter((d => { return barChartGenreSelected === 'all-genres' ? true : d['track_genre'] === barChartGenreSelected }));
+    const filteredBarData = data.filter((d) => {
+        return barChartGenreSelected === 'all-genres'
+            ? true
+            : d['track_genre'] === barChartGenreSelected
+    });
     
-
-    barChart(svgBar, marginBar, heightBarSvg, widthBarSvg, key_signature_map, mode_map, filteredBarData, accent(selectedGenre.indexOf(barChartGenreSelected)));
+    // render barchart
+    barChart(svgBar, {
+        margin: marginBar, // marginBar,
+        height: heightBarSvg, 
+        width: widthBarSvg,
+        key_signature_map,
+        mode_map,
+        data: filteredBarData,
+        color: accent(selectedGenre.indexOf(barChartGenreSelected))
+    });
+    
     const legendSvg = d3
         .select('svg#legend')
         .attr("height", Math.max(150, 30 * selectedGenre.length));
