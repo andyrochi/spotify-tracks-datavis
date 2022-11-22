@@ -9,6 +9,7 @@
     <link rel="icon" type="image/x-icon" href="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTNNJSprlgRk-Az8mFxtnPberky7sCrLzENDaatDXkDuJBnNnqG">
     <!-- bootstrap css -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
     <link rel="stylesheet" href="styles.css">
     <!-- CSS only -->
 </head>
@@ -20,8 +21,8 @@
                 <img src="https://pnggrid.com/wp-content/uploads/2021/05/Spotify-Music-Logo-2048x2048.png" alt="Logo" width="30" height="30" class="d-inline-block me-2">
                 <span class="navbar-brand h1 p-0 m-0">Spotify Tracks Dataset Visualization</span>
             </div>
-            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
-                Button with data-bs-target
+            <button class="btn btn-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                <i class="bi bi-filter"></i> Filter
             </button>
         </div>
     </nav>
@@ -94,28 +95,26 @@
     </div>
 
     <!-- offcanvas -->
-    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel" data-bs-scroll="true">
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel" data-bs-scroll="true">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasExampleLabel">Filter Data</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
             <div>
-            Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
+                Here, you can select the attributes that your are interested to analyze.
             </div>
-            <ul class="list-unstyled ps-0">
-                <li class="mb-1">
-                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
-                        Filter Genres
-                    </button>
-                    <div class="collapse show" id="home-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                        </ul>
-                    </div>
-                </li>
-            </ul>
-            <select multiple search='true' id="genre-search">
-            </select>
+            <div class="m-3">
+                <h6>
+                    Filter Genres:
+                </h6>
+                <p>
+                    If no genres were selected, <b>all-genres</b> will be selected by default.
+                </p>
+                <select multiple search='true' id="genre-search">
+                </select>
+            </div>
+            
         </div>
     </div>
     <!-- bootstrap stuff -->
