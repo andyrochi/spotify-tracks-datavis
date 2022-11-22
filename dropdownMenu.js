@@ -2,12 +2,18 @@ export const dropdownMenu = (selection, props) => {
     const {
         options,
         onOptionClicked,
-        selectedOption
+        selectedOption,
+        dropdownClass
     } = props;
     
     let select = selection.selectAll('select').data([null]);
     select = select.enter().append('select')
         .merge(select)
+            .attr("class", () => {
+                if (dropdownClass)
+                    return dropdownClass;
+                return "";
+            })
             .on('change', function() {
                 onOptionClicked(this.value);
             });

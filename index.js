@@ -298,7 +298,8 @@ const render = () => {
         .call(dropdownMenu, {
             options: selectedGenre,
             onOptionClicked: onBarChartGenreClicked,
-            selectedOption: barChartGenreSelected
+            selectedOption: barChartGenreSelected,
+            dropdownClass: "form-select-lg"
         });
 
     // set the dimensions and margins of the graph

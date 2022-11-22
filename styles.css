@@ -56,11 +56,18 @@ body {
 
 }
 
+.single-genre-info {
+    font-size: 1.2rem;
+    margin-right: 12px;
+    display: block;
+}
+
 .dashboard-card {
     padding: 2rem;
     margin: 1rem;
     border-radius: 1rem;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    background-color: white;
 }
 
 /*   
