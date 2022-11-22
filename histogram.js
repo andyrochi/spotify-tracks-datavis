@@ -17,8 +17,11 @@ export const histogram = (selection, props) => {
         data
     } = props;
 
+    const minVal = d3.min(data, (d) => d[chosenAttribute]);
+    const minX = Math.min(minVal, 0);
+
     const x = d3.scaleLinear()
-    .domain([0, xMax[chosenAttribute]])
+    .domain([minX, xMax[chosenAttribute]])
     .range([0, width]);
 
     xAxis
