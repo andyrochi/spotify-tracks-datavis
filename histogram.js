@@ -14,10 +14,17 @@ export const histogram = (selection, props) => {
         mouseleaveHistogram,
         showGenre,
         accent,
-        data
+        data,
+        sliceThreshold
     } = props;
 
-    const minVal = d3.min(data, (d) => d[chosenAttribute]);
+    // filter data
+    let filteredData = data.filter((d) => showGenre === 'all-genres' ? true : d['track_genre'] === showGenre);
+    const slicePoint = Math.round(filteredData.length * sliceThreshold / 100);
+    console.log('slice:', slicePoint, filteredData.length);
+    filteredData = filteredData.slice(0, slicePoint);
+    
+    const minVal = d3.min(filteredData, (d) => d[chosenAttribute]);
     const minX = Math.min(minVal, 0);
 
     const x = d3.scaleLinear()
@@ -41,15 +48,12 @@ export const histogram = (selection, props) => {
         .value(function(d) { return d[chosenAttribute]; })   // I need to give the vector of value
         .domain(x.domain())  // then the domain of the graphic
         .thresholds(thresholds); // then the numbers of bins -> remove last threshold
-
-
+    
     // And apply this function to data to get the bins
-    let bins = histogram(data.filter((d) => showGenre === 'all-genres' ? true : d['track_genre'] === showGenre));
+    let bins = histogram(filteredData);
 
     // const binMax = bins.map((bin) => (d3.max(bin, (d) => d.length)));
     const binMax = d3.max(bins, (d) => d.length);
-
-    console.log(binMax);
 
     // Y axis: update now that we know the domain, remember to desconstruct
     y.domain([0, binMax]);   // d3.hist has to be called before the Y axis obviously

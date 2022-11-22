@@ -15,6 +15,15 @@ let data = {};
 let chosenAttribute = 'acousticness';
 let allData = {};
 
+let sliceThreshold = 50;
+let sortAscend = true;
+let sortAttribute = 'popularity';
+
+const sortData = (data, field, ascend) => {
+    const factor = ascend ? 1 : -1;
+    data.sort((a, b) => factor * (a[field] - b[field]));
+}
+
 const attributes = [
     'acousticness'
     , 'danceability'
@@ -205,6 +214,7 @@ const render = () => {
         accent,
         data,
         showGenre: barChartGenreSelected,
+        sliceThreshold
     });
     // const allRects = svg.selectAll("rect");
     // TODO: find a way to deal with this
@@ -340,6 +350,9 @@ csv('http://vis.lab.djosix.com:2020/data/spotify_tracks.csv')
         });
 
         data = loadedData;
+        
+        sortData(data, sortAttribute, false);
+
         allData = data;
 
         const genreList = Array.from(genreSet);
