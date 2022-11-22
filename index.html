@@ -139,9 +139,22 @@
                     
                         <input type="radio" class="btn-check" name="ascradio" value="descending" id="descradio" autocomplete="off" checked>
                         <label class="btn btn-outline-secondary" for="descradio">Descending</label>
-                    
                     </div>
                 </div>
+            </div>
+
+            <div class="m-3">
+                <h5>
+                    Select TOP N percent of data
+                </h5>
+                <p>
+                    After sorting, select the top <b>n &percnt;</b> rows of <b>each</b> genre.
+                </p>
+                <div>
+                    <label for="slice-threshold-input" class="form-label">You're selecting the top <b><span id="slice-threshold"></span>&percnt;</b> of rows.</label>
+                    <input type="range" class="form-range" min="1" max="100" value="12" id="slice-threshold-input">
+                </div>
+                
             </div>
             
         </div>

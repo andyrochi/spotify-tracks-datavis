@@ -88,6 +88,21 @@ for(const radioBtn of sortAscendRadioElements) {
     })
 }
 
+// construct input
+const slicerElement = document.querySelector('input[type="range"]#slice-threshold-input');
+// Initalize
+slicerElement.value = sliceThreshold;
+const showNumber = document.querySelector('#slice-threshold');
+showNumber.innerText = sliceThreshold;
+
+slicerElement.addEventListener('input', function(event) {
+    showNumber.innerText = this.value;
+})
+
+slicerElement.addEventListener('change', function(event) {
+    sliceThreshold = this.value;
+    refreshDataAndRerender();
+})
 
 const key_signature_map = ["C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"];
 const mode_map = ["minor", "major"];
