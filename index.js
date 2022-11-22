@@ -214,7 +214,7 @@ const render = () => {
     radarPlot(svgRadar, ticks, svgRadarDim, radarLabels, data, selectedGenre, accent);
     
     // construct barChart select
-    select('#bar-chart-genre')
+    select('#single-genre-analysis-select')
         .call(dropdownMenu, {
             options: selectedGenre,
             onOptionClicked: onBarChartGenreClicked,

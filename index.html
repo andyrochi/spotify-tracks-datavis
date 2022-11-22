@@ -25,33 +25,63 @@
             </button>
         </div>
     </nav>
-    <div class="d-flex">
-        <div class="svg-container">
-            Distribution of Numeric Attributes
-            <svg id="plot"></svg>
-            <label for="attribute">Selected attribute</label>
-            <select name="attribute" id="selectAttribute" aria-label="select display">
-                <option disabled>-- Choose an attribute --</option>
-            </select>
-        </div>
-        <div class="radar-container">
-            <svg id="radar-chart"></svg>
-        </div>
-        <div class="bar-chart-container">
-            <svg id="bar-chart"></svg>
-            <div id="bar-chart-genre">
+    <div class="d-flex w-100 justify-content-between">
+        <div class="single-genre-container dashboard-card">
+            <h2>
+                Single Genre Analysis
+            </h2>
+            <div id="single-genre-analysis-select" class="d-flex justify-content-center">
+                You are currently analyzing: 
+            </div>
+            <div class="charts d-flex flex-wrap">
+                <div class="svg-container">
+                    <h4>Histogram of <select name="attribute" id="selectAttribute" aria-label="select display">
+                        <!-- <option disabled>-- Choose an attribute --</option> -->
+                    </select></h4> 
+                    <svg id="plot"></svg>
+                    <!-- <label for="attribute">Selected attribute</label> -->
+                    
+                </div>
+                <div class="bar-chart-container">
+                    <h4>Count of each major/minor key</h4>
+                    <svg id="bar-chart"></svg>
+                </div>
             </div>
         </div>
-        <div class="legend">
-            <svg id="legend"></svg>
+
+        <div class="radar-container dashboard-card">
+            <h2>
+                Averaged Statistics of Each Genre
+            </h2>
+            <svg id="radar-chart"></svg>
         </div>
     </div>
-
-    <div class="violin-plot-container">
-        <svg id="violin-plot"></svg>
-        <select name="attribute" id="selectViolinAttribute" aria-label="select display">
-            <option disabled>-- Choose an attribute --</option>
-        </select>
+    <div class="d-flex">
+        <div class="dashboard-card">
+            <h2>
+                Cross Genre Visualization
+            </h2>
+            <div class="violin-plot-container d-flex flex-column">
+                <h4>Numerical Distribution Analysis</h4>
+                <svg id="violin-plot"></svg>
+                <div>
+                    <label for="violinAttribute">Select a feature to compare:</label>
+                    <select name="violinAttribute" id="selectViolinAttribute" aria-label="select display">
+                        <option disabled>-- Choose an attribute --</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="legend dashboard-card">
+            <h2>
+                Legend
+            </h2>
+            <p>
+                Filtered genres. To select more genres, please filter from above
+            </p>
+            <svg id="legend"></svg>
+        </div>
+        
     </div>
    
 

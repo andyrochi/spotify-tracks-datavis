@@ -21,6 +21,7 @@ body {
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    /* position: relative; */
 }
 
 .radar-container {
@@ -37,6 +38,22 @@ body {
     justify-content: center;
     flex-direction: column;
     align-items: center;
+}
+
+.single-genre-container {
+    /* background-color: gray; */
+    
+}
+
+.violin-plot-container {
+
+}
+
+.dashboard-card {
+    padding: 2rem;
+    margin: 1rem;
+    border-radius: 1rem;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 /*   
