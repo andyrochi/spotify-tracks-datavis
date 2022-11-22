@@ -252,11 +252,14 @@ const render = () => {
     const marginBar = {top: 20, right: 30, bottom: 40, left: 90},
         widthBarSvg = 360,
         heightBarSvg = 300;
-    const filteredBarData = data.filter((d) => {
+    let filteredBarData = data.filter((d) => {
         return barChartGenreSelected === 'all-genres'
             ? true
             : d['track_genre'] === barChartGenreSelected
     });
+    
+    const slicePoint = Math.round(filteredBarData.length * sliceThreshold / 100);
+    filteredBarData = filteredBarData.slice(0, slicePoint);
     
     // render barchart
     barChart(svgBar, {
