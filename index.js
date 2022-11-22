@@ -38,6 +38,8 @@ const legendAttributeSpan = document.querySelector("#legend-attribute");
 const legendOrderSpan = document.querySelector("#legend-order");
 const legendSliceSpan = document.querySelector("#legend-slice");
 
+const pieChartDiv = document.querySelector(".pie-chart-container");
+const barChartTop20Div = document.querySelector(".bar-chart-top-20-container");
 
 const refreshDataAndRerender = () => {
     sortData(data, sortAttribute, sortAscend);
@@ -275,6 +277,14 @@ const render = () => {
 
     // decide hide or show genre count option
     showHiddenBarChartOption = (barChartGenreSelected === 'all-genres') ? true : false;
+    if (showHiddenBarChartOption) {
+        pieChartDiv.style.display = 'none';
+        barChartTop20Div.style.display = 'flex';
+    }
+    else {
+        pieChartDiv.style.display = 'flex';
+        barChartTop20Div.style.display = 'none';
+    }
     // console.log('showHiddenOption:', showHiddenBarChartOption);
     
     histogram(svg, {
