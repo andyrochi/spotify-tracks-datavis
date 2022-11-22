@@ -27,34 +27,31 @@
         </div>
     </nav>
     <div class="d-flex w-100 justify-content-between">
-        <div class="single-genre-container dashboard-card">
+        <div class="single-genre-container dashboard-card w-100">
             <h2>
                 Single Genre Analysis
             </h2>
             <div id="single-genre-analysis-select" class="d-flex justify-content-center">
                 You are currently analyzing: 
             </div>
-            <div class="charts d-flex flex-wrap">
+            <div class="charts d-flex flex-wrap justify-content-between">
                 <div class="svg-container">
                     <h4>Histogram of <select name="attribute" id="selectAttribute" aria-label="select display">
                         <!-- <option disabled>-- Choose an attribute --</option> -->
                     </select></h4> 
                     <svg id="plot"></svg>
                     <!-- <label for="attribute">Selected attribute</label> -->
-                    
                 </div>
                 <div class="bar-chart-container">
                     <h4>Count of each major/minor key</h4>
                     <svg id="bar-chart"></svg>
                 </div>
+                <div class="pie-chart-container">
+                    <h4>Propotion of explicit songs:</h4>
+                    <svg id="pie-chart"></svg>
+                    <!-- <p>This plot shows the number of songs in the genre <br/> that contains explicit lyrics.</p> -->
+                </div>
             </div>
-        </div>
-
-        <div class="radar-container dashboard-card">
-            <h2>
-                Averaged Statistics of Each Genre
-            </h2>
-            <svg id="radar-chart"></svg>
         </div>
     </div>
     <div class="d-flex">
@@ -73,6 +70,12 @@
                 </div>
             </div>
         </div>
+        <div class="radar-container dashboard-card">
+            <h2>
+                Averaged Statistics of Each Genre
+            </h2>
+            <svg id="radar-chart"></svg>
+        </div>
         <div class="legend dashboard-card">
             <h2>
                 Legend
@@ -83,10 +86,6 @@
             <svg id="legend"></svg>
         </div>
         
-    </div>
-    
-    <div id="my_dataviz">
-
     </div>
 
     <div class="content">

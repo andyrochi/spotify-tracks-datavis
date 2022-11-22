@@ -176,8 +176,7 @@ const widthPie = 400,
 const radius = Math.min(widthPie, heightPie) / 2 - marginPie;
 
 // append the svg object to the div called 'my_dataviz'
-const svgPie = d3.select("#my_dataviz")
-  .append("svg")
+const svgPie = d3.select("svg#pie-chart")
     .attr("width", widthPie)
     .attr("height", heightPie)
   .append("g")
