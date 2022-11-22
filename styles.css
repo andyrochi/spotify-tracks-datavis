@@ -47,15 +47,6 @@ body {
     align-items: center;
 }
 
-.single-genre-container {
-    /* background-color: gray; */
-    
-}
-
-.violin-plot-container {
-
-}
-
 .single-genre-info {
     font-size: 1.2rem;
     margin-right: 12px;
@@ -96,6 +87,12 @@ text {
 div.legend {
     overflow-x: hidden;
     overflow-y: auto;
+    min-width: 200px;
+}
+
+.dashboard-wrapper {
+    max-width: 1520px;
+    margin: auto;
 }
 /*   
 .tick text {
