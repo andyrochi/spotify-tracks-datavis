@@ -10,6 +10,7 @@ import { dropdownMenu } from './dropdownMenu.js';
 import { violinPlot } from './violinPlot.js';
 import { histogram } from './histogram.js';
 import { pieChart } from './pieChart.js';
+import { barChartTop20 } from './barChartTop20.js';
 
 let data = {};
 let chosenAttribute = 'acousticness';
@@ -20,7 +21,13 @@ let sortAscend = false;
 let sortAttribute = 'popularity';
 
 let showHiddenBarChartOption = true;
+let genreListNoAll = [];
 
+const dataIsGenre = (d) => {
+    return barChartGenreSelected === 'all-genres'
+        ? true
+        : d['track_genre'] === barChartGenreSelected
+}
 
 const sortData = (data, field, ascend) => {
     const factor = ascend ? 1 : -1;
@@ -63,6 +70,8 @@ const xMax = {
     'popularity': 100,
     'tempo': 260
 };
+
+const someOtherColor = d3.scaleOrdinal(d3.schemeSet3);
 
 const sortAttributeSelectElement = document.querySelector("#sort-attribute-select");
 
@@ -198,6 +207,10 @@ const svgBar = d3
                 .select("#bar-chart");
 svgBar.append("g");
 
+const svgBarTop20 = d3
+                .select("#bar-chart-top-20");
+                svgBarTop20.append("g");
+
 const accent = d3.scaleOrdinal(d3.schemeAccent);
 
 // Violin Plot Stuff
@@ -319,11 +332,8 @@ const render = () => {
     const marginBar = {top: 20, right: 30, bottom: 40, left: 90},
         widthBarSvg = 360,
         heightBarSvg = 300;
-    let filteredBarData = data.filter((d) => {
-        return barChartGenreSelected === 'all-genres'
-            ? true
-            : d['track_genre'] === barChartGenreSelected
-    });
+    
+    let filteredBarData = data.filter(dataIsGenre);
     
     const slicePoint = Math.round(filteredBarData.length * sliceThreshold / 100);
     filteredBarData = filteredBarData.slice(0, slicePoint);
@@ -375,10 +385,32 @@ const render = () => {
         radius,
         sliceThreshold
     });
-    
+
     legendAttributeSpan.innerText = sortAttribute;
     legendOrderSpan.innerText = sortAscend ? "ascending" : "descending";
     legendSliceSpan.innerText = sliceThreshold;
+
+    const cntList = genreListNoAll.map((genre) => filteredBarData.filter((d) => {
+        return genre === 'all-genres'
+            ? true
+            : d['track_genre'] === genre
+    }).length);
+
+    const genreCnt = [];
+    for (let i = 0 ; i < genreListNoAll.length ; i++ ){
+        const str = genreListNoAll[i];
+        genreCnt.push({ genre: str, value:cntList[i]});
+    }
+    
+    // render barchart
+    barChartTop20(svgBarTop20, {
+        margin: marginBar, // marginBar,
+        height: heightBarSvg, 
+        width: widthBarSvg,
+        dataCnt: genreCnt,
+        color: someOtherColor
+    });
+
 
 };
 
@@ -432,6 +464,7 @@ csv('http://vis.lab.djosix.com:2020/data/spotify_tracks.csv')
         allData = data;
 
         const genreList = Array.from(genreSet);
+        genreListNoAll = Array.from(genreSet);
         genreList.unshift("all-genres");
         const genreSearch = d3.select("#genre-search");
 
