@@ -16,8 +16,10 @@ let chosenAttribute = 'acousticness';
 let allData = {};
 
 let sliceThreshold = 50;
-let sortAscend = true;
+let sortAscend = false;
 let sortAttribute = 'popularity';
+
+
 
 const sortData = (data, field, ascend) => {
     const factor = ascend ? 1 : -1;
@@ -50,6 +52,25 @@ const xMax = {
     'popularity': 100,
     'tempo': 260
 };
+
+const sortAttributeSelectElement = document.querySelector("#sort-attribute-select");
+
+// construct select menu
+for(let i = 0; i < attributes.length; i++) {
+    const opt = attributes[i];
+    const el = document.createElement("option");
+    el.textContent = opt;
+    el.value = opt;
+    if (opt === sortAttribute) el.selected = true;
+    sortAttributeSelectElement.appendChild(el);
+}
+
+sortAttributeSelectElement.addEventListener('change', (event) => {
+    const selectedValue = event.target.selectedOptions[0].value;
+    sortAttribute = selectedValue;
+    sortData(data, sortAttribute, sortAscend);
+    render();
+})
 
 const key_signature_map = ["C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"];
 const mode_map = ["minor", "major"];

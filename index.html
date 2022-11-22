@@ -47,7 +47,7 @@
                     <svg id="bar-chart"></svg>
                 </div>
                 <div class="pie-chart-container">
-                    <h4>Propotion of explicit songs:</h4>
+                    <h4>Proportion of explicit songs:</h4>
                     <svg id="pie-chart"></svg>
                     <!-- <p>This plot shows the number of songs in the genre <br/> that contains explicit lyrics.</p> -->
                 </div>
@@ -105,15 +105,32 @@
         <div class="offcanvas-body">
             <div>
                 Here, you can select the attributes that your are interested to analyze.
+                Genres selected here will be available for analysis.
             </div>
             <div class="m-3">
-                <h6>
-                    Filter Genres:
-                </h6>
+                <h5>
+                    Filter Genres
+                </h5>
                 <p>
                     If no genres were selected, <b>all-genres</b> will be selected by default.
                 </p>
                 <select multiple search='true' id="genre-search">
+                </select>
+            </div>
+
+            <div class="m-3">
+                <h5>
+                    Sort the Data
+                </h5>
+                <p>
+                    Sort the data according to the selected attribute. Sort according to:
+                </p>
+
+                <select class="form-select" aria-label="Set sort attribute" id="sort-attribute-select">
+                    <!-- Javascript will deal with the attributes -->
+                </select>
+                
+                
                 </select>
             </div>
             
