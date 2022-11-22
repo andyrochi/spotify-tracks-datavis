@@ -198,8 +198,8 @@ const render = () => {
     const radarMaxTick = ticks[ticks.length - 1];
     const svgRadarDim = 400;
     const svgRadar = select(".radar-container #radar-chart")
-    .attr("width", svgRadarDim)
-    .attr("height", svgRadarDim);
+        .attr("width", svgRadarDim)
+        .attr("height", svgRadarDim);
     const radarDim = svgRadarDim / 2;
     const radarLabels = [
         'acousticness',
@@ -242,23 +242,6 @@ const render = () => {
         color: accent(selectedGenre.indexOf(barChartGenreSelected))
     });
     
-    const legendSvg = d3
-        .select('svg#legend')
-        .attr("height", Math.max(150, 30 * selectedGenre.length));
-    const legendG = 
-        legendSvg.selectAll('g.container')
-            .data([null]);
-
-    const legendGEnter = 
-        legendG
-        .enter()
-        .append('g')
-        .attr('class', 'container');
-    
-    const translatedLegend = legendGEnter.merge(legendG)
-        .attr('transform',
-            `translate(${40},${30})`);
-
     violinPlot(svgViolin, {
         margin: marginViolin,
         width: widthViolin,
@@ -272,15 +255,22 @@ const render = () => {
         colorScheme: accent
     });
 
-    const legendProps = {
+    const legendSvg = d3
+        .select('svg#legend')
+            .attr("height", Math.max(150, 50 * selectedGenre.length))
+            .attr("width", 200);
+    
+        console.log(50 * selectedGenre.length);
+
+    colorLegend(legendSvg, {
         colorScale: accent,
         circleRadius: 1.0,
         circleRadius: 10,
         spacing: 40,
         textOffset: 20,
-        selectedGenre
-      };
-    colorLegend(translatedLegend, legendProps);
+        selectedGenreList: selectedGenre
+    });
+
 };
 
 

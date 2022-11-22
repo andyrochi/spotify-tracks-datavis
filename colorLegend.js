@@ -4,20 +4,29 @@ export const colorLegend = (selection, props) => {
       circleRadius,
       spacing,
       textOffset,
-      selectedGenre
+      selectedGenreList
     } = props;
     
-    let selectedGenreLocal = selectedGenre;
+    const legendG = 
+        selection.selectAll('g.container')
+            .data([null]);
 
-    if (selectedGenre.length === 0) {
-      selectedGenreLocal = ['AllGenres'];
-    }
+    const legendGEnter = legendG
+        .enter()
+          .append('g')
+          .attr('class', 'container');
+    
+    const translatedLegend = legendGEnter.merge(legendG)
+        .attr('transform',
+            `translate(${40},${30})`);
 
-    const groups = selection.selectAll('g')
-      .data(selectedGenreLocal);
+    const groups = translatedLegend.selectAll('g')
+      .data(selectedGenreList);
+    
     const groupsEnter = groups
       .enter().append('g')
         .attr('class', 'tick');
+    
     groupsEnter
       .merge(groups)
         .attr('transform', (d, i) =>
@@ -41,4 +50,4 @@ export const colorLegend = (selection, props) => {
         .attr('x', textOffset)
         .attr('class', d => `text-${d}`)
         .style('cursor', 'pointer');
-  }
+}
