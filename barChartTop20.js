@@ -14,12 +14,12 @@ export const barChartTop20 = (selection, props) => {
     // sort ascend
     let dataBar = dataCnt;
     
-    console.log(dataBar);
+    // console.log(dataBar);
     dataBar.sort((a, b) => {
         return b['value'] - a['value'];
     });
     dataBar = dataBar.slice(0, 20);
-    console.log(dataBar);
+    // console.log(dataBar);
     // // bar chart
     selection
         .attr("width", widthBar + margin.left + margin.right)
@@ -52,8 +52,8 @@ export const barChartTop20 = (selection, props) => {
     .domain(dataBar.map(d => d.genre))
     .padding(.1);
 
-    console.log('domain', yBar.domain());
-    console.log(yBar.range());
+    // console.log('domain', yBar.domain());
+    // console.log(yBar.range());
 
     const yBarAxis = svgBarG
         .selectAll("g.y-bar-axis").data([null]);

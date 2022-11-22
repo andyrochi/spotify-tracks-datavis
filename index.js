@@ -275,7 +275,7 @@ const render = () => {
 
     // decide hide or show genre count option
     showHiddenBarChartOption = (barChartGenreSelected === 'all-genres') ? true : false;
-    console.log('showHiddenOption:', showHiddenBarChartOption);
+    // console.log('showHiddenOption:', showHiddenBarChartOption);
     
     histogram(svg, {
         width,
