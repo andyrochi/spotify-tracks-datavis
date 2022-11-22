@@ -238,7 +238,7 @@ const render = () => {
         'valence'
     ];
 
-    radarPlot(svgRadar, ticks, svgRadarDim, radarLabels, data, selectedGenre, accent);
+    radarPlot(svgRadar, ticks, svgRadarDim, radarLabels, data, selectedGenre, accent, sliceThreshold);
     
     // construct barChart select
     select('#single-genre-analysis-select')

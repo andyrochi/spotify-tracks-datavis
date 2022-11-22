@@ -21,7 +21,7 @@ export const histogram = (selection, props) => {
     // filter data
     let filteredData = data.filter((d) => showGenre === 'all-genres' ? true : d['track_genre'] === showGenre);
     const slicePoint = Math.round(filteredData.length * sliceThreshold / 100);
-    console.log('slice:', slicePoint, filteredData.length);
+    // console.log('slice:', slicePoint, filteredData.length);
     filteredData = filteredData.slice(0, slicePoint);
     
     const minVal = d3.min(filteredData, (d) => d[chosenAttribute]);

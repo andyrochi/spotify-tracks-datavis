@@ -22,7 +22,8 @@ export const radarPlot = (
     radarLabels,
     data,
     selectedGenre,
-    colorScale
+    colorScale,
+    sliceThreshold
 ) => {
     const radarMaxTick = ticks[ticks.length - 1];
     const radarDim = svgRadarDim / 2;
@@ -132,7 +133,13 @@ export const radarPlot = (
             const thisG = d3.select(this);
             const pathSelector = `path.plot-${i}`;
             const plotI = `plot-${i}`;
-            const filteredData = data.filter((d) => { return genre === 'all-genres' ? true : d['track_genre'] === genre});
+            let filteredData = data.filter((d) => { return genre === 'all-genres' ? true : d['track_genre'] === genre});
+            // console.log('radarPlot:', genre);
+            const slicePoint = Math.round(filteredData.length * sliceThreshold / 100);
+            // console.log('slice:', slicePoint, filteredData.length);
+            filteredData = filteredData.slice(0, slicePoint);
+            // console.log(filteredData);
+
             const radarData = [getRadarObject(filteredData)];
             const radarPaths = thisG.selectAll(pathSelector)
                 .data(radarData);
