@@ -24,7 +24,12 @@ let sortAttribute = 'popularity';
 const sortData = (data, field, ascend) => {
     const factor = ascend ? 1 : -1;
     data.sort((a, b) => factor * (a[field] - b[field]));
-}
+};
+
+const refreshDataAndRerender = () => {
+    sortData(data, sortAttribute, sortAscend);
+    render();
+};
 
 const attributes = [
     'acousticness'
@@ -68,9 +73,21 @@ for(let i = 0; i < attributes.length; i++) {
 sortAttributeSelectElement.addEventListener('change', (event) => {
     const selectedValue = event.target.selectedOptions[0].value;
     sortAttribute = selectedValue;
-    sortData(data, sortAttribute, sortAscend);
-    render();
+    refreshDataAndRerender();
 })
+
+// ascend descend
+const sortAscendRadioElements = document.querySelectorAll('input[name="ascradio"]');
+for(const radioBtn of sortAscendRadioElements) {
+    radioBtn.addEventListener('change', function(event) {
+        if (this.checked) {
+            const curValue = this.value;
+            sortAscend = curValue === 'ascending' ? true : false;
+        }
+        refreshDataAndRerender();
+    })
+}
+
 
 const key_signature_map = ["C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"];
 const mode_map = ["minor", "major"];
