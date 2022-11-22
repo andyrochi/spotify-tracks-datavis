@@ -305,7 +305,8 @@ const render = () => {
     pieChart(svgPie, {
         data,
         selectedGenre: barChartGenreSelected,
-        radius
+        radius,
+        sliceThreshold
     });
 
 };

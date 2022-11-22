@@ -2,7 +2,8 @@ export const pieChart = (selection, props) => {
     const {
         data,
         selectedGenre,
-        radius
+        radius,
+        sliceThreshold
     } = props;
     // all pie
     // set the color scale
@@ -11,9 +12,12 @@ export const pieChart = (selection, props) => {
         .range(["#e15759", "#59a14f"]);
     
     const count_explicit = (dList, genre) => {
-        const filtered = dList.filter((d) => genre === 'all-genres'
+        let filtered = dList.filter((d) => genre === 'all-genres'
             ? true
             : d['track_genre'] === genre);
+        const slicePoint = Math.round(filtered.length * sliceThreshold / 100);
+        filtered = filtered.slice(0, slicePoint);
+
         const exCount = filtered.filter( d => d['explicit'] === true).length;
         const nonExCount = filtered.filter( d => d['explicit'] === false).length;
         console.log(exCount, nonExCount);
