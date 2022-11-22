@@ -20,7 +20,6 @@ export const pieChart = (selection, props) => {
 
         const exCount = filtered.filter( d => d['explicit'] === true).length;
         const nonExCount = filtered.filter( d => d['explicit'] === false).length;
-        console.log(exCount, nonExCount);
         return {
             explicit: exCount,
             'normal': nonExCount
@@ -96,7 +95,7 @@ export const pieChart = (selection, props) => {
     
     pieLabel
         .join('text')
-            .text(d => { console.log(d.data); return `${d.data[0]}:${d.data[1]}`})
+            .text(d => { return `${d.data[0]}:${d.data[1]}`})
             .attr("class", "labels")
             .attr("font-size", "12px")
             .attr('transform', function(d) {

@@ -22,10 +22,8 @@ export const violinPlot = (selection, props) => {
 
     const filterAndSliceData = (selectedGenre) => {
         let filteredData = data.filter((d) => selectedGenre === 'all-genres' ? true : d['track_genre'] === selectedGenre);
-        console.log('filter and slice data:', selectedGenre, filteredData.length);
         const slicePoint = Math.round(filteredData.length * sliceThreshold / 100);
         filteredData = filteredData.slice(0, slicePoint);
-        console.log('sliced results:', filteredData, slicePoint);
         return filteredData;
     }
     
@@ -33,7 +31,7 @@ export const violinPlot = (selection, props) => {
 
     const minEachGenre = filteredData.map((data) => d3.min(data, (d) => d[chosenAttribute]));
     const minY = Math.min(...minEachGenre, 0);
-    console.log(minEachGenre);
+    // console.log(minEachGenre);
     // Build and Show the Y scale
     const y = d3.scaleLinear()
         .domain([minY, yMax[chosenAttribute]])
@@ -61,7 +59,7 @@ export const violinPlot = (selection, props) => {
     // And apply this function to data to get the bins
     let bins = selectedGenre.map((selected_genre,i) => histogram(filteredData[i]));
     const binSum = bins.map((bin) => (d3.sum(bin, (d) => d.length)));
-    console.log('binSum:', binSum);
+    // console.log('binSum:', binSum);
     // const maxNum = Math.max(...binMax);
     
     const xNum = 

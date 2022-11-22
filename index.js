@@ -291,7 +291,7 @@ const render = () => {
             .attr("height", Math.max(150, 50 * selectedGenre.length))
             .attr("width", 200);
     
-        console.log(50 * selectedGenre.length);
+        // console.log(50 * selectedGenre.length);
 
     colorLegend(legendSvg, {
         colorScale: accent,
