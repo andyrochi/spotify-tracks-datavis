@@ -9,7 +9,8 @@ export const violinPlot = (selection, props) => {
         xAxis,
         chosenAttribute,
         colorScheme,
-        data
+        data,
+        sliceThreshold
     } = props;
 
     selection
@@ -18,8 +19,17 @@ export const violinPlot = (selection, props) => {
     const svg = selection.select("g")
         .attr("transform",
         "translate(" + margin.left + "," + margin.top + ")");
+
+    const filterAndSliceData = (selectedGenre) => {
+        let filteredData = data.filter((d) => selectedGenre === 'all-genres' ? true : d['track_genre'] === selectedGenre);
+        console.log('filter and slice data:', selectedGenre, filteredData.length);
+        const slicePoint = Math.round(filteredData.length * sliceThreshold / 100);
+        filteredData = filteredData.slice(0, slicePoint);
+        console.log('sliced results:', filteredData, slicePoint);
+        return filteredData;
+    }
     
-    const filteredData = selectedGenre.map(selected_genre => data.filter((d) => selected_genre === 'all-genres' ? true : d['track_genre'] === selected_genre));
+    const filteredData = selectedGenre.map(filterAndSliceData);
 
     const minEachGenre = filteredData.map((data) => d3.min(data, (d) => d[chosenAttribute]));
     const minY = Math.min(...minEachGenre, 0);
@@ -81,8 +91,8 @@ export const violinPlot = (selection, props) => {
                 .style("fill", colorScheme(i))
                 .style("fill-opacity", 0.5)
                 .attr("d", d3.area()
-                    .x0(function(d){ return(xNum(-d.length/binSum[i])) } )
-                    .x1(function(d){ return(xNum(d.length/binSum[i])) } )
+                    .x0(function(d){ return(xNum(-d.length/binSum[i])) } ) // we normalize the data here on purpose
+                    .x1(function(d){ return(xNum(d.length/binSum[i])) } ) // we normalize the data here on purpose
                     .y(function(d){ return(y(d.x0)) } )
                 .curve(d3.curveCatmullRom)    // This makes the line smoother to give the violin appearance. Try d3.curveStep to see the difference
             );

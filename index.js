@@ -282,7 +282,8 @@ const render = () => {
         xAxis: xAxisViolin,
         chosenAttribute: chosenViolinAttribute,
         data,
-        colorScheme: accent
+        colorScheme: accent,
+        sliceThreshold
     });
 
     const legendSvg = d3
