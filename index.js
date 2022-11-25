@@ -444,7 +444,7 @@ const resize = addEventListener('resize', debouncedResize);
 
 const genreSet = new Set();
 
-csv('http://vis.lab.djosix.com:2020/data/spotify_tracks.csv')
+csv('https://gist.githubusercontent.com/andyrochi/ade546bbf55b5ca24771a1e5e94609f3/raw/6d17bcd61513e94971f57db6e2bca7ea4b99b2ed/spotify_tracks_dataset.csv')
     .then(loadedData => {
         loadedData.forEach(d => {
             // fields
