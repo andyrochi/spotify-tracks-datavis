@@ -56,6 +56,8 @@ export const radarPlot = (
         .data(ticks);
     
     circles.join("circle")
+        .transition()
+        .duration(1000)
         .attr("cx", radarDim)
         .attr("cy", radarDim)
         .attr("fill", "none")
@@ -89,6 +91,8 @@ export const radarPlot = (
     
     radarAxis.join("line")
         .attr("class", "axis")
+        .transition()
+        .duration(1000)
         .attr("x1", radarDim)
         .attr("y1", radarDim)
         .attr("x2", (d, i) => getRadarAxis(i).x)
@@ -100,6 +104,8 @@ export const radarPlot = (
     
     radarAxisLabel.join("text")
         .attr("class", "axis-label")
+        .transition()
+        .duration(1000)
         .attr("x", (d, i) => getRadarAxisLabel(d, i).x)
         .attr("y", (d, i) => getRadarAxisLabel(d, i).y)
         .text((d) => (d));
@@ -133,12 +139,10 @@ export const radarPlot = (
             const thisG = d3.select(this);
             const pathSelector = `path.plot-${i}`;
             const plotI = `plot-${i}`;
+
             let filteredData = data.filter((d) => { return genre === 'all-genres' ? true : d['track_genre'] === genre});
-            // console.log('radarPlot:', genre);
             const slicePoint = Math.round(filteredData.length * sliceThreshold / 100);
-            // console.log('slice:', slicePoint, filteredData.length);
             filteredData = filteredData.slice(0, slicePoint);
-            // console.log(filteredData);
 
             const radarData = [getRadarObject(filteredData)];
             const radarPaths = thisG.selectAll(pathSelector)
@@ -151,6 +155,8 @@ export const radarPlot = (
                     return path;
                 })
                 .attr("class", plotI)
+                .transition()
+                .duration(1000)
                 .attr("d", d => lineDraw(d))
                 .attr("stroke", (d) => colorScale(i))
                 .attr("stroke-width", 3)
