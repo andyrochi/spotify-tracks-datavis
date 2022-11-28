@@ -4,7 +4,7 @@ This is a simple data visualization project that visualizes the [Spotify Tracks 
 
 The demo of the website can be viewed [here](https://andyrochi.github.io/spotify-tracks-datavis/).
 
-This is project is created using vanilla javascript, D3.js, and Bootstrap.
+This project is created using vanilla javascript, D3.js, and Bootstrap.
 
 # System Introduction
 
